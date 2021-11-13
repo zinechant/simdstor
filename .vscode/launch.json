@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "huff main",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/huffman/test/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/huffman",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "huff make"
+        },
+        {
+            "name": "get_insts.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/python3/get_insts.py",
+            "args": [
+                "--hist",
+                "${workspaceFolder}/huffman/test/1024.hist",
+                "--objdump",
+                "${workspaceFolder}/huffman/test/main.s",
+                "--profile",
+                "hdec"
+            ],
+            "console": "integratedTerminal"
+        },
+    ]
+}
