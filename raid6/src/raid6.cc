@@ -4,7 +4,8 @@
 
 namespace raid6 {
 
-void Encode(int size, uint8_t* message[], uint8_t* parity[]) {
+void Encode(uint8_t GF_MUL[][W2Power], uint8_t GF_INV[], int size,
+            uint8_t* message[], uint8_t* parity[]) {
   for (int k = 0; k < size; k++) {
     uint8_t p = 0, q = 0;
     for (int i = 0; i < M; i++) {
@@ -16,7 +17,8 @@ void Encode(int size, uint8_t* message[], uint8_t* parity[]) {
   }
 }
 
-void Decode(int size, uint8_t* message[], uint8_t* parity[]) {
+void Decode(uint8_t GF_MUL[][W2Power], uint8_t GF_INV[], int size,
+            uint8_t* message[], uint8_t* parity[]) {
   for (int k = 0; k < size; k++) {
     uint8_t p = parity[0][k];
     uint8_t q = parity[1][k];
@@ -26,7 +28,7 @@ void Decode(int size, uint8_t* message[], uint8_t* parity[]) {
       q ^= GF_MUL[1 << i][message[i][k]];
     }
 
-    uint8_t y = GF_DIV[q ^ p][3];
+    uint8_t y = GF_MUL[q ^ p][GF_INV[3]];
     uint8_t x = p ^ y;
 
     dprintf("x = 0x%x, message[0][k] = 0x%x\n", x, message[0][k]);

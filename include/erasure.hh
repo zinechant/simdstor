@@ -1,12 +1,16 @@
 #ifndef ERASURE_HH_
 #define ERASURE_HH_
 
-#include "debug.h"
-#include "gf_table.hh"
+#include <cstdint>
 
-const int STRIPE = 256 << 10;
-const int M = 6;
+#include "debug.h"
+
+namespace erasure {
+
 const int K = 2;
+const int M = 6;
 const int N = M + K;
+
+}  // namespace erasure
 
 #endif  // ERASURE_HH_

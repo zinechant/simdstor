@@ -2,3 +2,5 @@
 *.o
 *.hist
 *.out
+*MiB
+m5_*

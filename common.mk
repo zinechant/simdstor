@@ -1,7 +1,6 @@
 ifeq ($(RVV),0)
 	CC = gcc
 	CXX= g++
-	ARCH = -march=native
 else ifeq ($(RVV),1) # scalar implementation compiled with riscv
 	CC = $(RISCV)/bin/clang
 	CXX= $(RISCV)/bin/clang++
@@ -29,20 +28,22 @@ INCLUDE += -I $(DIR)/include
 
 OBJS = $(CSRCS:.c=.o) $(CXXSRCS:.cc=.o)
 
-OPT ?= -O2
-
 CPPFLAGS += -static -g $(OPT) -Wall -fPIC $(INCLUDE) $(ARCH)
 CXXFLAGS += -std=c++17
 CFLAGS += -std=c11
 LDFLAGS += $(ARCH)
 
+all : OPT ?= -O2
+all : ARCH ?= -march=core2
 all : $(TARGET)
 
-debug : OPT=-O2
+debug : OPT ?= -Og
+debug : ARCH ?= -march=core2
 debug : CPPFLAGS+= -D DEBUG
 debug : $(TARGET)
 
-release : OPT=-O3
+release : OPT ?= -O3
+release : ARCH ?= -march=native
 release : CPPFLAGS+= -D NDEBUG
 release : $(TARGET)
 
