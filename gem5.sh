@@ -13,7 +13,7 @@ if [ "0" == "$S" ] ; then
     scratchpad_addr="0"
     DSUFFIX="${DSUFFIX}_noscratchpad"
 else
-    scratchpad="--scratchpad"
+    scratchpad="--scratchpad --scratchpad_trace"
     scratchpad_addr="1099511627776"
     DSUFFIX="${DSUFFIX}_scratchpad"
 fi
@@ -23,7 +23,7 @@ if [ "0" == "$B" ] ; then
     streambuffer_addr="0"
     DSUFFIX="${DSUFFIX}_nostreambuffer"
 else
-    streambuffer="--streambuffer"
+    streambuffer="--streambuffer --streambuffer_trace"
     streambuffer_addr="1100585369600"
     DSUFFIX="${DSUFFIX}_streambuffer"
 fi
