@@ -6,8 +6,8 @@ from collections import deque
 from trace_stream import trace_stream
 
 
-def packet2io(pbpath, reqnano, tsbsize, pagesize, offset):
-    (ticknano, istream, ostream) = trace_stream(pbpath)
+def packet2io(pbpath, vague, reqnano, tsbsize, pagesize, offset, cores, bias):
+    (ticknano, istream, ostream) = trace_stream(pbpath, vague)
     ticknano //= int(1e9)
     ns = len(istream) + len(ostream)
     pps = tsbsize // pagesize // ns
@@ -56,22 +56,38 @@ def packet2io(pbpath, reqnano, tsbsize, pagesize, offset):
     for i in range(len(iot) - 1):
         iot[i + 1][0] = max(iot[i][0] + reqnano, iot[i + 1][0])
 
-    return iot
+    nano = reqnano << 3
+    aiot = []
+    for j in range(cores):
+        for i in range(len(iot)):
+            x = iot[i].copy()
+            x[0] += j * nano
+            x[1] += j * nano
+            x[2] += j * bias
+            aiot.append(x)
+
+    aiot = list(sorted(aiot))
+
+    return aiot
 
 
 def main(argv):
     F = flags.FLAGS
-    iot = packet2io(F.pbpath, F.reqnano, F.tsbsize, F.pagesize, F.offset)
+    iot = packet2io(F.pbpath, F.vague, F.reqnano, F.tsbsize, F.pagesize,
+                    F.offset, F.cores, F.bias)
     for l in iot:
         print(" ".join(map(lambda x: str(x), l)))
 
 
 if __name__ == "__main__":
     flags.DEFINE_string("pbpath", None, "path of the pb file")
+    flags.DEFINE_integer("vague", 1, "vaugeness when compositing stream")
     flags.DEFINE_integer("reqnano", 10, "request latency in ns")
-    flags.DEFINE_integer("tsbsize", 65536, "total streambuffer size")
+    flags.DEFINE_integer("tsbsize", 131072, "total streambuffer size")
     flags.DEFINE_integer("pagesize", 4096, "page size")
     flags.DEFINE_integer("offset", 1 << 40, "Address offset in packets")
+    flags.DEFINE_integer("cores", 8, "number of cores")
+    flags.DEFINE_integer("bias", (1 << 21) + 11, "Page address bias per core")
 
     flags.mark_flag_as_required("pbpath")
     app.run(main)

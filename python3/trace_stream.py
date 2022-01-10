@@ -79,7 +79,7 @@ def decodeMessage(in_file, message):
         return False
 
 
-def trace_stream(pbpath):
+def trace_stream(pbpath, vague):
     istream = {}
     ostream = {}
 
@@ -108,11 +108,16 @@ def trace_stream(pbpath):
 
             oaddr = int(packet.addr)
             naddr = oaddr + int(packet.size)
-            if oaddr in stream:
-                stream[naddr] = stream[oaddr]
-                del stream[oaddr]
-                stream[naddr].append((oaddr, int(packet.tick)))
-            else:
+
+            for v in range(vague):
+                vaddr = oaddr - v
+                if vaddr in stream:
+                    stream[naddr] = stream[vaddr]
+                    del stream[vaddr]
+                    stream[naddr].append((oaddr, int(packet.tick)))
+                    break
+                vaddr = None
+            if vaddr is None:
                 stream[naddr] = [(oaddr, int(packet.tick))]
 
     logging.info("packets: %d, istream: %d, ostream: %d" %
@@ -124,10 +129,11 @@ def trace_stream(pbpath):
 
 def main(argv):
     FLAGS = flags.FLAGS
-    ans = trace_stream(FLAGS.pbpath)
+    ans = trace_stream(FLAGS.pbpath, FLAGS.vague)
 
 
 if __name__ == "__main__":
     flags.DEFINE_string("pbpath", None, "path of the pb file")
+    flags.DEFINE_integer("vague", 1, "vaugeness when compositing stream")
     flags.mark_flag_as_required("pbpath")
     app.run(main)
