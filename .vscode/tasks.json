@@ -2,13 +2,14 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "huffman make",
+            "label": "ans make",
             "command": "/usr/bin/make",
             "args": [
                 "debug"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/huffman/test"
+                "cwd": "${workspaceFolder}/ans/test",
+                "env": {"RVV": "0"}
             },
             "problemMatcher": [],
             "group": {

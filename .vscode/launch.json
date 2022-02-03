@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "huff main",
+            "name": "ans main",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/huffman/test/main",
-            "args": [],
+            "program": "${workspaceFolder}/ans/test/main",
+            "args": ["${workspaceFolder}/data/001MiB", "t", "0", "0"],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/huffman",
+            "cwd": "${workspaceFolder}/ans/test",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -22,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "huff make"
+            "preLaunchTask": "ans make"
         },
         {
             "name": "get_insts.py",

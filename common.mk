@@ -29,7 +29,7 @@ INCLUDE += -I $(DIR)/include
 
 OBJS = $(CSRCS:.c=.o) $(CXXSRCS:.cc=.o)
 
-CPPFLAGS += -static -g $(OPT) -Wall -fPIC $(INCLUDE) $(ARCH)
+CPPFLAGS += -static -g $(OPT) -Wall -Wextra -fPIC $(INCLUDE) $(ARCH)
 CXXFLAGS += -std=c++17
 CFLAGS += -std=c11
 LDFLAGS += $(ARCH)
@@ -37,7 +37,7 @@ LDFLAGS += $(ARCH)
 all : OPT ?= -O2
 all : $(TARGET)
 
-debug : OPT ?= -Og
+debug : OPT ?= -O0
 debug : CPPFLAGS+= -D DEBUG
 debug : $(TARGET)
 
