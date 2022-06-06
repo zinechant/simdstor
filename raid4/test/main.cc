@@ -16,7 +16,8 @@ int main(int argc, char* argv[]) {
   uint32_t fs = ftell(f);
   fclose(f);
 
-  uint32_t bs = fs / M + 1;
+  uint32_t bs = fs / M;
+  if (bs * M < fs) bs++;
   fs = bs * N;
 
   uint8_t* streambuffer = nullptr;

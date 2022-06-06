@@ -1,21 +1,25 @@
-ifeq ($(RVV),0)
+ifeq ($(ARM), 1)
+	CC = clang
+	CXX = clang++
+	ARCH = --gcc-toolchain=$(HOME)/arm --sysroot=$(HOME)/arm/aarch64-none-linux-gnu/libc --target=aarch64-linux-gnueabi -march=armv8.2-a+sve
+else ifeq ($(RVV),0)
 	CC = gcc
 	CXX= g++
 	ARCH ?= -march=core2
 else ifeq ($(RVV),1) # scalar implementation compiled with riscv
-	CC = $(RISCV)/bin/clang
-	CXX= $(RISCV)/bin/clang++
-	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -menable-experimental-extensions -march=rv64imv0p10 -mabi=lp64
+	CC = ${CLANG}/clang
+	CXX= ${CLANG}/clang++
+	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -march=rv64imv1p0 -mabi=lp64
 else ifeq ($(RVV),2)
-	CC = riscv64-unknown-elf-gcc
-	CXX= riscv64-unknown-elf-g++
+	CC = $(RISCV)/bin/riscv64-unknown-elf-gcc
+	CXX= $(RISCV)/bin/riscv64-unknown-elf-g++
 	CPPFLAGS += -D RVV
 	ARCH = -march=rv64imv -mabi=lp64
 else
-	CC = $(RISCV)/bin/clang
-	CXX= $(RISCV)/bin/clang++
+	CC = ${CLANG}/clang
+	CXX= ${CLANG}/clang++
 	CPPFLAGS += -D RVV
-	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -menable-experimental-extensions -march=rv64imv0p10 -mabi=lp64
+	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -march=rv64imv1p0 -mabi=lp64
 endif
 
 DIR:=$(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
@@ -32,7 +36,7 @@ OBJS = $(CSRCS:.c=.o) $(CXXSRCS:.cc=.o)
 CPPFLAGS += -static -g $(OPT) -Wall -Wextra -fPIC $(INCLUDE) $(ARCH)
 CXXFLAGS += -std=c++17
 CFLAGS += -std=c11
-LDFLAGS += $(ARCH)
+LDFLAGS += $(ARCH) -static
 
 all : OPT ?= -O2
 all : $(TARGET)
