@@ -4,7 +4,7 @@ if [ -z "$OPT" ]; then
     OPT="opt"
 fi
 if [ -z "$ARCH" ]; then
-    ARCH=RISCV
+    ARCH=ARM
 fi
 
 DSUFFIX=""

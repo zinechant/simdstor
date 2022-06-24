@@ -1,4 +1,8 @@
-ifeq ($(ARM), 1)
+ifeq ($(ARM),1)
+	CC = clang
+	CXX = clang++
+	ARCH = --gcc-toolchain=$(HOME)/arm --sysroot=$(HOME)/arm/aarch64-none-linux-gnu/libc --target=aarch64-linux-gnueabi -march=armv8.2-a+nofp
+else ifeq ($(ARM),2)
 	CC = clang
 	CXX = clang++
 	ARCH = --gcc-toolchain=$(HOME)/arm --sysroot=$(HOME)/arm/aarch64-none-linux-gnu/libc --target=aarch64-linux-gnueabi -march=armv8.2-a+sve
