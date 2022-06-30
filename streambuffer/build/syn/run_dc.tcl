@@ -37,7 +37,7 @@ elaborate $DesignName -library synthesis
 uniquify
 
 #---- All constraints are listed below ----#
-set clk_period 0.6
+set clk_period 0.5
 # Create a real clock if clock port is found
 if {[sizeof_collection [get_ports clk]] > 0} {
   set clk_name clk

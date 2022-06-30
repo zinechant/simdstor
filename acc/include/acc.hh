@@ -5,7 +5,7 @@
 
 namespace acc {
 
-long long acc(uint8_t data[], int rbytes, int field, int size);
+long long acc(uint8_t data[], int rbytes, int size);
 
 }  // namespace acc
 

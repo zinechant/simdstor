@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     is.read(reinterpret_cast<char*>(data), fs);
   }
 
-  long long ans = acc::acc(data, 16, 5, fs);
+  long long ans = acc::acc(data, 16, fs);
 
   if (argv[2][0] == '0') delete[](streambuffer);
   return ans;
