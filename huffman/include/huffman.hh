@@ -18,7 +18,7 @@ static_assert((sizeof(uint16_t) << 3) >= MAX_DIGITS);
 
 typedef std::vector<std::pair<codeword_t, codeword_t>> codes_t;
 typedef std::vector<codeword_t> dictionary_t;
-typedef std::vector<codeword_t> codeids_t;
+typedef std::vector<codeid_t> codeids_t;
 typedef std::vector<byte_t> bytes_t;
 
 // const codes_t& codes_gen(int num, int seed);

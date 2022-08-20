@@ -6,6 +6,10 @@ else ifeq ($(ARM),2)
 	CC = clang
 	CXX = clang++
 	ARCH = --gcc-toolchain=$(HOME)/arm --sysroot=$(HOME)/arm/aarch64-none-linux-gnu/libc --target=aarch64-linux-gnueabi -march=armv8.2-a+sve
+else ifeq ($(ARM),0)
+	CC = clang
+	CXX = clang++
+	ARCH ?= -march=core2
 else ifeq ($(RVV),0)
 	CC = gcc
 	CXX= g++
