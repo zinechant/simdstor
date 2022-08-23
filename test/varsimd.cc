@@ -35,11 +35,10 @@ class VarSIMDTest : public ::testing::Test {
   data_t data;
   meta_t meta;
   inline svint32_t fixvec(int64_t x, int64_t y) {
-    svbool_t at = svptrue_b8();
-    svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+    svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
-    svint32_t v = svvcpz(svcmpeq(at, index, 1), x);
-    return svvcpy_m(v, svcmpeq(at, index, 3), y);
+    svint32_t v = svvcpz(svcmpeq(svptrue_b8(), index, 1), x);
+    return svvcpy_m(v, svcmpeq(svptrue_b8(), index, 3), y);
   }
 
   inline svint32_t randvec() {
@@ -77,7 +76,8 @@ class VarSIMDTest : public ::testing::Test {
     return ans;
   }
 
-  inline std::pair<std::vector<uint8_t>, std::vector<uint8_t>> randVarWidth(uint64_t bits) {
+  inline std::pair<std::vector<uint8_t>, std::vector<uint8_t>> randVarWidth(
+      uint64_t bits) {
     std::pair<std::vector<uint8_t>, std::vector<uint8_t>> ans;
     ans.first.resize((bits + 7) >> 3);
     ans.second.resize(4);
@@ -288,10 +288,9 @@ TEST_F(VarSIMDTest, vcpy_zpi) {
   int64_t a = 0, b = x, c = y, d = 0;
   INFO("x = %ld, y = %ld.   %ld, %ld, %ld, %ld\n", x, y, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t v = svvcpz(svcmpeq(at, index, 1), x);
-  v = svvcpy_m(v, svcmpeq(at, index, 2), y);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t v = svvcpz(svcmpeq(svptrue_b8(), index, 1), x);
+  v = svvcpy_m(v, svcmpeq(svptrue_b8(), index, 2), y);
 
   int n = svvstore(v, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -327,10 +326,8 @@ TEST_F(VarSIMDTest, vadd_zi1) {
   const int64_t a = z, b = x + z, c = z, d = y + z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  v = svvadd_n_s32_m(at, v, z);
+  v = svvadd_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(v, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -343,10 +340,8 @@ TEST_F(VarSIMDTest, vadd_zi2) {
   const int64_t a = z, b = x + z, c = z, d = y + z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_n_s32_m(at, v, z);
+  svint32_t w = svvadd_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -359,10 +354,8 @@ TEST_F(VarSIMDTest, vadd_zi3) {
   const int64_t a = z, b = x + z, c = z, d = y + z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  v = svvadd_n_s32_m(at, v, z);
+  v = svvadd_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(v, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -375,13 +368,11 @@ TEST_F(VarSIMDTest, vadd_zzz) {
   const int64_t a = z, b = x + z, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmplt(at, index, 2), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmplt(svptrue_b8(), index, 2), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(at, v, u);
+  svint32_t w = svvadd_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -396,13 +387,11 @@ TEST_F(VarSIMDTest, vadd_zpmz) {
   const int64_t a = z, b = x + z, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(svcmplt(at, index, 2), v, u);
+  svint32_t w = svvadd_m(svcmplt(svptrue_b8(), index, 2), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -415,13 +404,11 @@ TEST_F(VarSIMDTest, vcmpeqi) {
   const int64_t a = 0, b = x, c = z, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svint32_t index = svvand_m(at, svvindex(0, 1), 3);
+  svint32_t index = svvand_m(svptrue_b8(), svvindex(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(svvcmpeq(at, index, 2), v, u);
+  svint32_t w = svvadd_m(svvcmpeq(svptrue_b8(), index, 2), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -434,13 +421,11 @@ TEST_F(VarSIMDTest, vcmpnei) {
   const int64_t a = z, b = x, c = z, d = y + z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svint32_t index = svvand_m(at, svvindex(0, 1), 3);
+  svint32_t index = svvand_m(svptrue_b8(), svvindex(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(svvcmpne(at, index, 1), v, u);
+  svint32_t w = svvadd_m(svvcmpne(svptrue_b8(), index, 1), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -453,13 +438,11 @@ TEST_F(VarSIMDTest, vcmplti) {
   const int64_t a = z, b = x + z, c = z, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svint32_t index = svvand_m(at, svvindex(0, 1), 3);
+  svint32_t index = svvand_m(svptrue_b8(), svvindex(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(svvcmplt(at, index, 3), v, u);
+  svint32_t w = svvadd_m(svvcmplt(svptrue_b8(), index, 3), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -472,13 +455,11 @@ TEST_F(VarSIMDTest, vcmplei) {
   const int64_t a = z, b = x + z, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svint32_t index = svvand_m(at, svvindex(0, 1), 3);
+  svint32_t index = svvand_m(svptrue_b8(), svvindex(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvadd_s32_m(svvcmple(at, index, 1), v, u);
+  svint32_t w = svvadd_m(svvcmple(svptrue_b8(), index, 1), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -491,10 +472,8 @@ TEST_F(VarSIMDTest, vsub_zi1) {
   const int64_t a = -z, b = x - z, c = -z, d = y - z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  v = svvsub_n_s32_m(at, v, z);
+  v = svvsub_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(v, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -507,10 +486,8 @@ TEST_F(VarSIMDTest, vsub_zi2) {
   const int64_t a = -z, b = x - z, c = -z, d = y - z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvsub_n_s32_m(at, v, z);
+  svint32_t w = svvsub_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -523,13 +500,11 @@ TEST_F(VarSIMDTest, vsub_zzz) {
   const int64_t a = -z, b = x - z, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmplt(at, index, 2), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmplt(svptrue_b8(), index, 2), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvsub_s32_m(at, v, u);
+  svint32_t w = svvsub_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -544,13 +519,11 @@ TEST_F(VarSIMDTest, vsub_zpmz) {
   const int64_t a = -z, b = x - z, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvsub_s32_m(svcmplt(at, index, 2), v, u);
+  svint32_t w = svvsub_m(svcmplt(svptrue_b8(), index, 2), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -563,10 +536,8 @@ TEST_F(VarSIMDTest, vmul_zi) {
   const int64_t a = 0, b = x * z, c = 0, d = y * z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmul_n_s32_m(at, v, z);
+  svint32_t w = svvmul_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -579,13 +550,11 @@ TEST_F(VarSIMDTest, vmul_zzz) {
   const int64_t a = 0, b = x * z, c = 0, d = y * z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmpne(at, index, 2), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmpne(svptrue_b8(), index, 2), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmul_s32_m(at, v, u);
+  svint32_t w = svvmul_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -600,13 +569,11 @@ TEST_F(VarSIMDTest, vmul_zzz1) {
   const int64_t a = 0, b = x * z, c = 0, d = y * z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmpne(at, index, 2), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmpne(svptrue_b8(), index, 2), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmul_s32_m(at, v, u);
+  svint32_t w = svvmul_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -621,13 +588,11 @@ TEST_F(VarSIMDTest, vmul_zpmz) {
   const int64_t a = 0, b = x, c = 0, d = y * z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmul_s32_m(svcmpeq(at, index, 3), v, u);
+  svint32_t w = svvmul_m(svcmpeq(svptrue_b8(), index, 3), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -640,13 +605,11 @@ TEST_F(VarSIMDTest, vdiv_zpmz) {
   const int64_t a = 0, b = x / z, c = 0, d = y / z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvdiv_m(svcmpne(at, index, 0), v, u);
+  svint32_t w = svvdiv_m(svcmpne(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -660,13 +623,11 @@ TEST_F(VarSIMDTest, vmax_zpmz) {
                 d = std::max(y, z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmax_s32_m(svcmpne(at, index, 0), v, u);
+  svint32_t w = svvmax_m(svcmpne(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -680,13 +641,11 @@ TEST_F(VarSIMDTest, vmin_zpmz) {
                 d = std::min(y, z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmin_s32_m(svcmpne(at, index, 0), v, u);
+  svint32_t w = svvmin_m(svcmpne(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -700,10 +659,8 @@ TEST_F(VarSIMDTest, vmax_zi) {
                 d = std::max(y, z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmax_n_s32_m(at, v, z);
+  svint32_t w = svvmax_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -717,10 +674,8 @@ TEST_F(VarSIMDTest, vmin_zi) {
                 d = std::min(y, z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvmin_n_s32_m(at, v, z);
+  svint32_t w = svvmin_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -733,10 +688,8 @@ TEST_F(VarSIMDTest, vand_zi) {
   const int64_t a = 0, b = x & z, c = 0, d = y & z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvand_n_m(at, v, z);
+  svint32_t w = svvand_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -749,10 +702,8 @@ TEST_F(VarSIMDTest, vand_zin) {
   const int64_t a = 0, b = x & z, c = 0, d = y & z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvand_n_m(at, v, z);
+  svint32_t w = svvand_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -765,13 +716,11 @@ TEST_F(VarSIMDTest, vand_zzz) {
   const int64_t a = 0, b = x & z, c = 0, d = y & z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmple(at, index, 3), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmple(svptrue_b8(), index, 3), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvand_m(at, v, u);
+  svint32_t w = svvand_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -787,13 +736,11 @@ TEST_F(VarSIMDTest, vand_zpmz) {
   const int64_t a = 0, b = x & z, c = 0, d = y & z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvand_m(svcmplt(at, index, 10), v, u);
+  svint32_t w = svvand_m(svcmplt(svptrue_b8(), index, 10), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -806,10 +753,8 @@ TEST_F(VarSIMDTest, vorr_zi) {
   const int64_t a = z, b = x | z, c = z, d = y | z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvorr_n_m(at, v, z);
+  svint32_t w = svvorr_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -822,13 +767,11 @@ TEST_F(VarSIMDTest, vorr_zzz) {
   const int64_t a = z, b = x | z, c = z, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmplt(at, index, 3), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmplt(svptrue_b8(), index, 3), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvorr_m(at, v, u);
+  svint32_t w = svvorr_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -844,13 +787,11 @@ TEST_F(VarSIMDTest, vorr_zpmz) {
   const int64_t a = z, b = x, c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvorr_m(svcmpeq(at, index, 0), v, u);
+  svint32_t w = svvorr_m(svcmpeq(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -863,10 +804,8 @@ TEST_F(VarSIMDTest, veor_zi) {
   const int64_t a = z, b = x ^ z, c = z, d = y ^ z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svveor_n_m(at, v, z);
+  svint32_t w = svveor_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -879,13 +818,11 @@ TEST_F(VarSIMDTest, veor_zzz) {
   const int64_t a = z, b = x ^ z, c = z, d = y ^ z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmpne(at, index, 125), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmpne(svptrue_b8(), index, 125), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svveor_m(at, v, u);
+  svint32_t w = svveor_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -901,13 +838,11 @@ TEST_F(VarSIMDTest, veor_zpmz) {
   const int64_t a = 0, b = x, c = z, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svveor_m(svcmpeq(at, index, 2), v, u);
+  svint32_t w = svveor_m(svcmpeq(svptrue_b8(), index, 2), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -920,10 +855,8 @@ TEST_F(VarSIMDTest, vbic_zi) {
   const int64_t a = 0, b = x & (~z), c = 0, d = y & (~z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvbic_n_m(at, v, z);
+  svint32_t w = svvbic_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -936,13 +869,11 @@ TEST_F(VarSIMDTest, vbic_zzz) {
   const int64_t a = 0, b = x, c = 0, d = y & (~z);
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
-  svint32_t u = svvcpz(svcmpne(at, index, 1), z);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
+  svint32_t u = svvcpz(svcmpne(svptrue_b8(), index, 1), z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvbic_m(at, v, u);
+  svint32_t w = svvbic_m(svptrue_b8(), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -958,13 +889,11 @@ TEST_F(VarSIMDTest, vbic_zpmz) {
   const int64_t a = 0, b = x & (~z), c = 0, d = y;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvbic_m(svcmple(at, index, 2), v, u);
+  svint32_t w = svvbic_m(svcmple(svptrue_b8(), index, 2), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -977,11 +906,9 @@ TEST_F(VarSIMDTest, vasr_zpi) {
   const int64_t a = 0, b = x, c = 0, d = y >> z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasr_n_s32_m(svcmpne(at, index, 1), v, z);
+  svint32_t w = svvasr_n_m(svcmpne(svptrue_b8(), index, 1), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -994,10 +921,8 @@ TEST_F(VarSIMDTest, vasr_zzi) {
   const int64_t a = 0, b = x >> z, c = 0, d = y >> z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasr_n_s32_m(at, v, z);
+  svint32_t w = svvasr_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -1013,13 +938,11 @@ TEST_F(VarSIMDTest, vasr_zpmz) {
   const int64_t a = 0, b = x >> z, c = 0, d = y >> z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasr_s32_m(svcmpne(at, index, 0), v, u);
+  svint32_t w = svvasr_m(svcmpne(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -1032,11 +955,9 @@ TEST_F(VarSIMDTest, vasl_zpi) {
   const int64_t a = 0, b = x, c = 0, d = y << z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasl_n_s32_m(svcmpne(at, index, 1), v, z);
+  svint32_t w = svvasl_n_m(svcmpne(svptrue_b8(), index, 1), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
@@ -1049,10 +970,8 @@ TEST_F(VarSIMDTest, vasl_zzi) {
   const int64_t a = 0, b = x << z, c = 0, d = y << z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasl_n_s32_m(at, v, z);
+  svint32_t w = svvasl_n_m(svptrue_b8(), v, z);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   int nn =
@@ -1068,26 +987,23 @@ TEST_F(VarSIMDTest, vasl_zpmz) {
   const int64_t a = 0, b = x << z, c = 0, d = y << z;
   INFO("x = %ld, y = %ld, z = %ld, %ld, %ld, %ld, %ld\n", x, y, z, a, b, c, d);
 
-  svbool_t at = svptrue_b8();
-
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
   svint32_t u = svvdup(z);
 
   svint32_t v = fixvec(x, y);
-  svint32_t w = svvasl_s32_m(svcmpne(at, index, 0), v, u);
+  svint32_t w = svvasl_m(svcmpne(svptrue_b8(), index, 0), v, u);
 
   int n = svvstore(w, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
 }
 
 TEST_F(VarSIMDTest, vmaxv_rv) {
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
   svint32_t v = randvec();
   int n = BHSD_RH(meta.data());
   EXPECT_LE(VB / 8, n);
-  int64_t w = svvmaxv(svcmple(at, index, 2), v);
+  int64_t w = svvmaxv(svcmple(svptrue_b8(), index, 2), v);
 
   int64_t u = 0x8000000000000001L;
   const uint8_t* pdata = data.data();
@@ -1102,13 +1018,12 @@ TEST_F(VarSIMDTest, vmaxv_rv) {
 }
 
 TEST_F(VarSIMDTest, vminv_rv) {
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
   svint32_t v = randvec();
   int n = BHSD_RH(meta.data());
   EXPECT_LE(VB / 8, n);
-  int64_t w = svvminv(svcmpne(at, index, 1), v);
+  int64_t w = svvminv(svcmpne(svptrue_b8(), index, 1), v);
 
   int64_t u = 0x7FFFFFFFFFFFFFFFL;
   const uint8_t* pdata = data.data();
@@ -1123,13 +1038,12 @@ TEST_F(VarSIMDTest, vminv_rv) {
 }
 
 TEST_F(VarSIMDTest, vaddv_rv) {
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
   svint32_t v = randvec();
   int n = BHSD_RH(meta.data());
   EXPECT_LE(VB / 8, n);
-  int64_t w = svvaddv(svcmpne(at, index, 0), v);
+  int64_t w = svvaddv(svcmpne(svptrue_b8(), index, 0), v);
 
   int64_t u = 0;
   const uint8_t* pdata = data.data();
@@ -1144,14 +1058,13 @@ TEST_F(VarSIMDTest, vaddv_rv) {
 }
 
 TEST_F(VarSIMDTest, vabs_zpz) {
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
   svint32_t v = randvec();
   int n = BHSD_RH(meta.data());
   EXPECT_LE(VB / 8, n);
 
-  svint32_t w = svvabs_m(v, svcmple(at, index, 3), v);
+  svint32_t w = svvabs_m(v, svcmple(svptrue_b8(), index, 3), v);
   int nn =
       svvstore(w, (int8_t*)data.data() + VB, (int8_t*)meta.data() + VB + 2);
   EXPECT_EQ(n, nn);
@@ -1170,13 +1083,12 @@ TEST_F(VarSIMDTest, vabs_zpz) {
 }
 
 TEST_F(VarSIMDTest, vnum_v) {
-  svbool_t at = svptrue_b8();
-  svuint8_t index = svand_m(at, svindex_u8(0, 1), 3);
+  svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
 
   svint32_t v = randvec();
   int n = BHSD_RH(meta.data());
   EXPECT_LE(VB / 8, n);
-  int32_t w = svvnum(svcmpne(at, index, 2), v);
+  int32_t w = svvnum(svcmpne(svptrue_b8(), index, 2), v);
   int32_t m = n - (n / 4) * 4;
   int32_t u = (n / 4) * 3 + (m > 2 ? m - 1 : m);
   EXPECT_EQ(u, w);
@@ -1194,7 +1106,7 @@ TEST_F(VarSIMDTest, fixstream) {
   int rid = frstream((int8_t*)encoded.data(), width, bits);
   int wid = fwstream((int8_t*)dump.data(), width);
 
-  for (uint32_t i = 0; i < elems; ) {
+  for (uint32_t i = 0; i < elems;) {
     if (width <= 8) {
       svbool_t pg = svwhilelt_b8_u32(i, elems);
       svint8_t v = svunpack_s8(rid);
@@ -1230,6 +1142,4 @@ TEST_F(VarSIMDTest, fixstream) {
   for (uint32_t i = 0; i < encoded.size(); i++) {
     EXPECT_EQ(encoded[i], dump[i]);
   }
-
 }
-
