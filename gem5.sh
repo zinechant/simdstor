@@ -41,7 +41,7 @@ fi
 
 DATA="$( cd "$DIR/data" && pwd )"
 CLOCK="--cpu-clock=2GHz --sys-clock=2GHz"
-CPUMEM="--mem-size=8192MB --cpu-type=TimingSimpleCPU"
+CPUMEM="--mem-size=8192MB --cpu-type=MinorCPU"
 CACHES="--caches --l2cache --l1d_size=32kB --l1i_size=32kB --l2_size=256kB --l1d_assoc=8 --l1i_assoc=8 --l2_assoc=16"
 DEBUGFLAGS=""
 #DEBUGFLAGS = --debug-flags=NoncoherentXBar,CoherentXBar,CacheTick,SimpleCPUTick,Exec

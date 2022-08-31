@@ -7,9 +7,7 @@
 #include <string>
 
 const int VB = svcntb();
-const int MAXS = 20;
 const int BS = 2048;
-const int FS = VB << MAXS;
 const char* VECFP = "./vecs.";
 
 #ifdef NDEBUG
@@ -39,10 +37,9 @@ int main(int argc, char* argv[]) {
 
   assert(argc == 3);
   int shift = std::atoi(argv[1]);
-  assert(shift < MAXS);
+  const int FS = VB << shift;
 
   int8_t* streambuffer = nullptr;
-  int8_t* original = nullptr;
   if (argv[2][0] == '0') {
     streambuffer = (int8_t*)malloc(FS + 512);
   } else {
@@ -55,16 +52,13 @@ int main(int argc, char* argv[]) {
 
   INFO("%s", "vstore perf.\n");
 
-  FILE* fo = fopen((std::string(VECFP) + std::to_string(shift)).c_str(), "w");
-  INFO("%s", "fopened.\n");
-
-  for (int i = 0; i < FS; i += BS) {
-    fwrite(streambuffer + i, 1, BS, fo);
+  int ans = 0;
+  for (int i = 0, j = 0; i < FS; i += BS, j++) {
+    j = j & (BS - 1);
+    ans &= streambuffer[i + j];
   }
-  INFO("%s", "fwrote.\n");
 
-  fclose(fo);
-  if (argv[2][0] == '0') free(original);
+  if (argv[2][0] == '0') free(streambuffer);
 
-  return 0;
+  return ans;
 }
