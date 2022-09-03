@@ -8,6 +8,7 @@
 #include "arm_neon.h"
 #include "arm_sve.h"
 #include "gtest/gtest.h"
+#include "salloc.hh"
 #include "vsbytes.hh"
 
 #define INFO(fmt, ...) printf("[   INFO   ] " fmt, __VA_ARGS__);
@@ -61,10 +62,12 @@ class VarSIMDTest : public ::testing::Test {
     return svvload((int8_t*)data.data(), (int8_t*)meta.data());
   }
 
-  inline std::vector<uint8_t> randFixWidth(uint8_t width, uint64_t bits) {
-    std::vector<uint8_t> ans((bits + 7) >> 3, 0);
+  inline int8_t* randFixWidth(uint8_t width, uint64_t bits) {
+    uint32_t bytes = (bits + 7) >> 3;
+    int8_t* ans = sballoc(bytes);
+
     const uint32_t elems = bits / width;
-    uint8_t* pdata = ans.data();
+    uint8_t* pdata = (uint8_t*)ans;
     assert(!(bits % width));
 
     uint8_t pos = 0;
@@ -76,21 +79,21 @@ class VarSIMDTest : public ::testing::Test {
     return ans;
   }
 
-  inline std::pair<std::vector<uint8_t>, std::vector<uint8_t>> randVarWidth(
-      uint64_t bits) {
-    std::pair<std::vector<uint8_t>, std::vector<uint8_t>> ans;
-    ans.first.resize((bits + 7) >> 3);
-    ans.second.resize(4);
-    uint8_t* pdata = ans.first.data();
+  inline std::pair<int8_t*, int8_t*> randVarWidth(uint64_t bits) {
+    std::pair<int8_t*, int8_t*> ans(sballoc((bits + 7) >> 3), nullptr);
+    uint8_t* pdata = (uint8_t*)ans.first;
+    std::vector<int8_t> meta;
 
     for (uint8_t b = 0, pos = 0; bits; bits -= b) {
       b = std::min(URAND32() & 63, (uint32_t)bits);
       uint64_t x = (b == 0) ? 0 : ((1UL << b) + (URAND64() & MASK(b - 1)));
       PackBits(pdata, pos, b, x);
       AdvanceBits(pdata, pos, b);
-      ans.second.push_back(b);
+      meta.push_back(b);
     }
-    BHSD_WS(ans.second.data()) = ans.second.size() - 4;
+    ans.second = sballoc(meta.size() + 4);
+    BHSD_WS(ans.second) = meta.size();
+    memcpy(ans.second + 4, meta.data(), meta.size());
     return ans;
   }
 
@@ -1096,15 +1099,21 @@ TEST_F(VarSIMDTest, vnum_v) {
 
 TEST_F(VarSIMDTest, fixstream) {
   uint8_t width = (URAND8() & 63) + 1;
-  uint32_t bits = URAND20();
+  uint32_t bits = URAND20() + width;
   uint32_t elems = bits / width;
   bits = elems * width;
+  uint32_t bytes = (bits + 7) >> 3;
 
-  std::vector<uint8_t> encoded = randFixWidth(width, bits);
-  std::vector<uint8_t> dump(encoded.size(), 0);
+  INFO("fixstream bits = %u, elems = %u\n", bits, elems);
 
-  int rid = frstream((int8_t*)encoded.data(), width, bits);
-  int wid = fwstream((int8_t*)dump.data(), width);
+  int8_t* encoded = randFixWidth(width, bits);
+  int8_t* dump = sballoc(bytes);
+
+  INFO("encoded = %p, dump = %p\n", encoded, dump);
+
+  int rid = frstream(encoded, width, bits);
+  int wid = fwstream(dump, width);
+  INFO("rid = %x, wid = %x\n", rid, wid);
 
   for (uint32_t i = 0; i < elems;) {
     if (width <= 8) {
@@ -1135,11 +1144,11 @@ TEST_F(VarSIMDTest, fixstream) {
   }
 
   uint32_t bitsleft = erstream(rid);
-  assert(!bitsleft);
+  EXPECT_EQ(0U, bitsleft);
   uint32_t bitsright = ewstream(wid);
   EXPECT_EQ(bits, bitsright);
 
-  for (uint32_t i = 0; i < encoded.size(); i++) {
+  for (uint32_t i = 0; i < bytes; i++) {
     EXPECT_EQ(encoded[i], dump[i]);
   }
 }
