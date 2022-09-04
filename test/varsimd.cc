@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <random>
 
-#include "arm_neon.h"
 #include "arm_sve.h"
 #include "gtest/gtest.h"
 #include "salloc.hh"
@@ -79,18 +78,30 @@ class VarSIMDTest : public ::testing::Test {
     return ans;
   }
 
-  inline std::pair<int8_t*, int8_t*> randVarWidth(uint64_t bits) {
-    std::pair<int8_t*, int8_t*> ans(sballoc((bits + 7) >> 3), nullptr);
+  inline std::pair<int8_t*, int8_t*> randVarWidth(uint64_t bits,
+                                                  std::vector<uint64_t>* pvec) {
+    uint32_t bytes = (bits + 7) >> 3;
+    std::pair<int8_t*, int8_t*> ans(sballoc(bytes), nullptr);
     uint8_t* pdata = (uint8_t*)ans.first;
     std::vector<int8_t> meta;
 
-    for (uint8_t b = 0, pos = 0; bits; bits -= b) {
+    uint8_t pos = 0;
+    for (uint8_t b = 0; bits; bits -= b) {
       b = std::min(URAND32() & 63, (uint32_t)bits);
-      uint64_t x = (b == 0) ? 0 : ((1UL << b) + (URAND64() & MASK(b - 1)));
+      uint64_t x =
+          (b == 0) ? 0 : ((1UL << (b - 1)) + (URAND64() & MASK(b - 1)));
+      EXPECT_EQ(b, x ? 64 - __builtin_clzl(x) : 0);
       PackBits(pdata, pos, b, x);
       AdvanceBits(pdata, pos, b);
       meta.push_back(b);
+      if (pvec) pvec->push_back(x);
     }
+    if (pos) {
+      EXPECT_EQ(ans.first + bytes, (int8_t*)pdata + 1);
+    } else {
+      EXPECT_EQ(ans.first + bytes, (int8_t*)pdata);
+    }
+
     ans.second = sballoc(meta.size() + 4);
     BHSD_WS(ans.second) = meta.size();
     memcpy(ans.second + 4, meta.data(), meta.size());
@@ -1097,7 +1108,7 @@ TEST_F(VarSIMDTest, vnum_v) {
   EXPECT_EQ(u, w);
 }
 
-TEST_F(VarSIMDTest, fixstream) {
+TEST_F(VarSIMDTest, fixstream_fixvec) {
   uint8_t width = (URAND8() & 63) + 1;
   uint32_t bits = URAND20() + width;
   uint32_t elems = bits / width;
@@ -1113,7 +1124,7 @@ TEST_F(VarSIMDTest, fixstream) {
 
   int rid = frstream(encoded, width, bits);
   int wid = fwstream(dump, width);
-  INFO("rid = %x, wid = %x\n", rid, wid);
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
 
   for (uint32_t i = 0; i < elems;) {
     if (width <= 8) {
@@ -1150,5 +1161,54 @@ TEST_F(VarSIMDTest, fixstream) {
 
   for (uint32_t i = 0; i < bytes; i++) {
     EXPECT_EQ(encoded[i], dump[i]);
+  }
+}
+
+TEST_F(VarSIMDTest, varstream_fixvec) {
+  uint32_t bits = URAND20();
+  uint32_t bytes = (bits + 7) >> 3;
+  INFO("varstream bits = %u\n", bits);
+  std::vector<uint64_t> v;
+
+  auto pair = randVarWidth(bits, &v);
+  uint32_t elems = BHSD_RS(pair.second);
+  auto qair = std::make_pair(sballoc(bytes), sballoc(elems + 4));
+
+  INFO("pdata = %p, pmeta = %p\n", pair.first, pair.second);
+  INFO("ddata = %p, dmeta = %p\n", qair.first, qair.second);
+  EXPECT_EQ(elems, v.size());
+
+  int rid = vrstream(pair.first, pair.second, bits);
+  int wid = vwstream(qair.first, qair.second);
+
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+
+  for (uint32_t i = 0; i < elems; i += svcntd()) {
+    svbool_t pg = svwhilelt_b64_u32(i, elems);
+    svint64_t v = svunpack_s64(rid);
+    int n = svpack_s64(pg, v, wid);
+    EXPECT_NE(n, 0);
+  }
+
+  uint32_t bitsleft = erstream(rid);
+  EXPECT_EQ(0U, bitsleft);
+  uint32_t bitsright = ewstream(wid);
+  EXPECT_EQ(bits, bitsright);
+
+  uint32_t abits = 0;
+  for (uint32_t i = 0; i < elems + 4; i++) {
+    int j = i - 4;
+    if (j >= 0) {
+      abits += pair.second[i];
+      EXPECT_EQ(pair.second[i], qair.second[i])
+          << "j = " << j << ": " << v[j] << "   abits: " << abits;
+    } else {
+      EXPECT_EQ(pair.second[i], qair.second[i]) << "i = " << i;
+    }
+  }
+  EXPECT_EQ(bits, abits);
+
+  for (uint32_t i = 0; i < bytes; i++) {
+    EXPECT_EQ(pair.first[i], qair.first[i]) << "i = " << i;
   }
 }
