@@ -1126,31 +1126,27 @@ TEST_F(VarSIMDTest, fixstream_fixvec) {
   int wid = fwstream(dump, width);
   INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
 
-  for (uint32_t i = 0; i < elems;) {
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
     if (width <= 8) {
       svbool_t pg = svwhilelt_b8_u32(i, elems);
       svint8_t v = svunpack_s8(rid);
-      int n = svpack_s8(pg, v, wid);
-      EXPECT_NE(n, 0);
-      i += svcntb();
+      n = svpack_s8(pg, v, wid);
+      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
     } else if (width <= 16) {
       svbool_t pg = svwhilelt_b16_u32(i, elems);
       svint16_t v = svunpack_s16(rid);
-      int n = svpack_s16(pg, v, wid);
-      EXPECT_NE(n, 0);
-      i += svcnth();
+      n = svpack_s16(pg, v, wid);
+      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
     } else if (width <= 32) {
       svbool_t pg = svwhilelt_b32_u32(i, elems);
       svint32_t v = svunpack_s32(rid);
-      int n = svpack_s32(pg, v, wid);
-      EXPECT_NE(n, 0);
-      i += svcntw();
+      n = svpack_s32(pg, v, wid);
+      EXPECT_EQ(n, i + svcntw() < elems ? svcntw() : elems - i);
     } else {
       svbool_t pg = svwhilelt_b64_u32(i, elems);
       svint64_t v = svunpack_s64(rid);
-      int n = svpack_s64(pg, v, wid);
-      EXPECT_NE(n, 0);
-      i += svcntd();
+      n = svpack_s64(pg, v, wid);
+      EXPECT_EQ(n, i + svcntd() < elems ? svcntd() : elems - i);
     }
   }
 
@@ -1183,11 +1179,97 @@ TEST_F(VarSIMDTest, varstream_fixvec) {
 
   INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
 
-  for (uint32_t i = 0; i < elems; i += svcntd()) {
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svbool_t pg = svwhilelt_b64_u32(i, elems);
     svint64_t v = svunpack_s64(rid);
-    int n = svpack_s64(pg, v, wid);
-    EXPECT_NE(n, 0);
+    n = svpack_s64(pg, v, wid);
+    EXPECT_EQ(n, i + svcntd() < elems ? svcntd() : elems - i);
+  }
+
+  uint32_t bitsleft = erstream(rid);
+  EXPECT_EQ(0U, bitsleft);
+  uint32_t bitsright = ewstream(wid);
+  EXPECT_EQ(bits, bitsright);
+
+  uint32_t abits = 0;
+  for (uint32_t i = 0; i < elems + 4; i++) {
+    int j = i - 4;
+    if (j >= 0) {
+      abits += pair.second[i];
+      EXPECT_EQ(pair.second[i], qair.second[i])
+          << "j = " << j << ": " << v[j] << "   abits: " << abits;
+    } else {
+      EXPECT_EQ(pair.second[i], qair.second[i]) << "i = " << i;
+    }
+  }
+  EXPECT_EQ(bits, abits);
+
+  for (uint32_t i = 0; i < bytes; i++) {
+    EXPECT_EQ(pair.first[i], qair.first[i]) << "i = " << i;
+  }
+}
+
+TEST_F(VarSIMDTest, fixstream_varvec) {
+  uint8_t width = (URAND8() & 63) + 1;
+  uint32_t bits = URAND20() + width;
+  uint32_t elems = bits / width;
+  bits = elems * width;
+  uint32_t bytes = (bits + 7) >> 3;
+
+  INFO("fixstream bits = %u, elems = %u\n", bits, elems);
+
+  int8_t* encoded = randFixWidth(width, bits);
+  int8_t* dump = sballoc(bytes);
+
+  INFO("encoded = %p, dump = %p\n", encoded, dump);
+
+  int rid = frstream(encoded, width, bits);
+  int wid = fwstream(dump, width);
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
+    svint32_t v = svvunpack(svptrue_b8(), rid);
+    n = svvpack(svptrue_b8(), v, wid);
+    crstream(rid, n);
+    EXPECT_NE(0U, n);
+    EXPECT_GE(elems - i, n);
+  }
+
+  uint32_t bitsleft = erstream(rid);
+  EXPECT_EQ(0U, bitsleft);
+  uint32_t bitsright = ewstream(wid);
+  EXPECT_EQ(bits, bitsright);
+
+  for (uint32_t i = 0; i < bytes; i++) {
+    EXPECT_EQ(encoded[i], dump[i]);
+  }
+}
+
+TEST_F(VarSIMDTest, varstream_varvec) {
+  uint32_t bits = URAND20();
+  uint32_t bytes = (bits + 7) >> 3;
+  INFO("varstream bits = %u\n", bits);
+  std::vector<uint64_t> v;
+
+  auto pair = randVarWidth(bits, &v);
+  uint32_t elems = BHSD_RS(pair.second);
+  auto qair = std::make_pair(sballoc(bytes), sballoc(elems + 4));
+
+  INFO("pdata = %p, pmeta = %p\n", pair.first, pair.second);
+  INFO("ddata = %p, dmeta = %p\n", qair.first, qair.second);
+  EXPECT_EQ(elems, v.size());
+
+  int rid = vrstream(pair.first, pair.second, bits);
+  int wid = vwstream(qair.first, qair.second);
+
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
+    svint32_t v = svvunpack(svptrue_b8(), rid);
+    n = svvpack(svptrue_b8(), v, wid);
+    crstream(rid, n);
+    EXPECT_NE(0U, n);
+    EXPECT_GE(elems - i, n);
   }
 
   uint32_t bitsleft = erstream(rid);
