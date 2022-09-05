@@ -15,8 +15,8 @@ else ifeq ($(RVV),0)
 	CXX= g++
 	ARCH ?= -march=core2
 else ifeq ($(RVV),1) # scalar implementation compiled with riscv
-	CC = ${CLANG}/clang
-	CXX= ${CLANG}/clang++
+	CC = clang
+	CXX= clang++
 	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -march=rv64imv1p0 -mabi=lp64
 else ifeq ($(RVV),2)
 	CC = $(RISCV)/bin/riscv64-unknown-elf-gcc
@@ -24,8 +24,8 @@ else ifeq ($(RVV),2)
 	CPPFLAGS += -D RVV
 	ARCH = -march=rv64imv -mabi=lp64
 else
-	CC = ${CLANG}/clang
-	CXX= ${CLANG}/clang++
+	CC = clang
+	CXX= clang++
 	CPPFLAGS += -D RVV
 	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -march=rv64imv1p0 -mabi=lp64
 endif

@@ -31,6 +31,10 @@ typedef std::array<uint8_t, N << 2> data_t;
 typedef std::array<uint8_t, N << 2> meta_t;
 
 class VarSIMDTest : public ::testing::Test {
+ public:
+  static void SetUpTestSuite() {
+    INFO("RANDOM_SEED: %d\n", testing::UnitTest::GetInstance()->random_seed());
+  }
  protected:
   data_t data;
   meta_t meta;
