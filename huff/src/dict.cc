@@ -14,15 +14,18 @@ void Dict::InitEnc(const uint8_t* data) {
   std::memcpy(enc.data() + 8, data, ibytes);
   enc[4] = kSymbolBits;
   enc[5] = kCodeBits;
+  enc[6] = enc[7] = 0;
 }
 
-void Dict::InitDec() {
+void Dict::InitDec(const uint8_t* ref, uint32_t rbytes) {
   const uint16_t* data16 = reinterpret_cast<const uint16_t*>(enc.data() + 8);
   const uint32_t* data32 = reinterpret_cast<const uint32_t*>(enc.data() + 8);
 
-  dec.resize(8 + (1 << (kCodeBits + (kSymbolBits <= 8 ? 1 : 2))));
+  uint32_t bytes = 8 + (1 << (kCodeBits + (kSymbolBits <= 8 ? 1 : 2)));
+  dec.resize(bytes);
   dec[4] = kSymbolBits;
   dec[5] = kCodeBits;
+  dec[6] = dec[7] = 0;
   uint16_t* dic16 = reinterpret_cast<uint16_t*>(dec.data() + 8);
   uint32_t* dic32 = reinterpret_cast<uint32_t*>(dec.data() + 8);
   for (uint32_t i = 0; i < kSymbols; i++) {
@@ -38,12 +41,18 @@ void Dict::InitDec() {
       }
     }
   }
+
+  if (!ref) return;
+  assert(bytes == rbytes);
+  for (uint32_t i = 4; i < bytes; i++) {
+    assert(dec[i] == ref[i]);
+  }
 }
 
 void Dict::Init(const uint8_t* data) {
   assert(kSymbols && !(kSymbols >> kCodeBits));
   InitEnc(data);
-  InitDec();
+  InitDec(nullptr, 0);
 }
 
 Dict::Dict(const std::vector<uint16_t>& enc, uint8_t cbits)
@@ -62,32 +71,37 @@ Dict::Dict(const std::vector<uint32_t>& enc, uint8_t cbits)
 }
 
 Dict::Dict(const char* inpath) {
-  uint32_t bytes = filesize(inpath);
-  enc.resize(bytes);
+  uint32_t abytes = filesize(inpath);
+  enc.resize(abytes);
 
   FILE* in = fopen(inpath, "rb");
-  fread(enc.data(), 1, bytes, in);
+  fread(enc.data(), 1, abytes, in);
   fclose(in);
 
   kSymbolBits = enc[4];
   kCodeBits = enc[5];
-  kSymbols = *reinterpret_cast<uint32_t*>(enc.data());
+  uint32_t ebytes = *reinterpret_cast<uint32_t*>(enc.data());
+  const uint8_t* ref = enc.data() + ebytes;
+  kSymbols = *reinterpret_cast<const uint32_t*>(ref);
 
   assert(kCodeBits && kCodeBits <= 24);
   assert(kSymbols && !(kSymbols >> kCodeBits));
   assert(kSymbolBits == 32 - __builtin_clz(kSymbols));
-  assert(bytes == 8 + (kSymbols << (kCodeBits <= 8 ? 1 : 2)));
+  assert(ebytes == 8 + (kSymbols << (kCodeBits <= 8 ? 1 : 2)));
 
-  InitDec();
+  InitDec(ref, abytes - ebytes);
+  enc.resize(ebytes);
 }
 
 const uint8_t* Dict::GetEnc(uint32_t elems) {
   *reinterpret_cast<uint32_t*>(enc.data()) = elems;
+  assert(enc.size() == 8 + (kSymbols << (kCodeBits <= 8 ? 1 : 2)));
   return enc.data();
 }
 const uint8_t* Dict::GetDec(uint32_t elems) {
-  *reinterpret_cast<uint32_t*>(enc.data()) = elems;
-  return enc.data();
+  *reinterpret_cast<uint32_t*>(dec.data()) = elems;
+  assert(dec.size() == 8 + (1 << (kCodeBits + (kSymbolBits <= 8 ? 1 : 2))));
+  return dec.data();
 }
 
 std::pair<uint8_t, uint32_t> Dict::Encode(uint32_t sid) const {
@@ -110,9 +124,13 @@ std::pair<uint8_t, uint32_t> Dict::Decode(uint32_t code) const {
 
 void Dict::save(const char* outpath) {
   FILE* out = fopen(outpath, "wb");
-  const uint8_t* data = GetEnc(kSymbols);
-  uint32_t bytes = (kSymbols << (kCodeBits <= 8 ? 1 : 2)) + 8;
-  fwrite(data, 1, bytes, out);
+
+  const uint8_t* edata = GetEnc(enc.size());
+  fwrite(edata, 1, enc.size(), out);
+
+  const uint8_t* ddata = GetDec(kSymbols);
+  fwrite(ddata, 1, dec.size(), out);
+
   fclose(out);
 }
 

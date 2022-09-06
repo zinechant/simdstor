@@ -128,10 +128,25 @@ void test(uint32_t kSymbols, uint8_t cbits, const char* path) {
 }
 
 int main() {
-  test<uint8_t, uint16_t>(1 << 5, 8, "dict1.save");
-  test<uint8_t, uint32_t>(1 << 5, 16, "dict2.save");
-  test<uint16_t, uint32_t>(1 << 12, 18, "dict3.save");
-  test<uint32_t, uint32_t>(1 << 18, 24, "dict4.save");
+  test<uint8_t, uint16_t>(1 << 5, 8, "dict0.save");
+  test<uint8_t, uint32_t>(1 << 5, 16, "dict1.save");
+  test<uint16_t, uint32_t>(1 << 12, 18, "dict2.save");
+  test<uint32_t, uint32_t>(1 << 18, 24, "dict3.save");
+
+  test<uint8_t, uint16_t>(1 << 5, 8, "dict4.save");
+  test<uint8_t, uint32_t>(1 << 5, 16, "dict5.save");
+  test<uint16_t, uint32_t>(1 << 12, 18, "dict6.save");
+  test<uint32_t, uint32_t>(1 << 18, 24, "dict7.save");
+
+  test<uint8_t, uint16_t>(1 << 5, 8, "dict8.save");
+  test<uint8_t, uint32_t>(1 << 5, 16, "dict9.save");
+  test<uint16_t, uint32_t>(1 << 12, 18, "dict10.save");
+  test<uint32_t, uint32_t>(1 << 18, 24, "dict11.save");
+
+  test<uint8_t, uint16_t>(1 << 5, 8, "dict12.save");
+  test<uint8_t, uint32_t>(1 << 5, 16, "dict13.save");
+  test<uint16_t, uint32_t>(1 << 12, 18, "dict14.save");
+  test<uint32_t, uint32_t>(1 << 18, 24, "dict15.save");
 
   return 0;
 }

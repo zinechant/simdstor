@@ -1,7 +1,6 @@
 #ifndef HUFF_DICT_HH_
 #define HUFF_DICT_HH_
 
-
 #include <cinttypes>
 #include <vector>
 
@@ -16,7 +15,7 @@ class Dict {
   std::vector<uint8_t> dec;
 
   void InitEnc(const uint8_t* data);
-  void InitDec();
+  void InitDec(const uint8_t* ref, uint32_t rbytes);
   void Init(const uint8_t* data);
 
  public:
