@@ -57,14 +57,14 @@ void Dict::Init(const uint8_t* data) {
 
 Dict::Dict(const std::vector<uint16_t>& enc, uint8_t cbits)
     : kSymbols(enc.size()),
-      kSymbolBits(32 - __builtin_clz(kSymbols)),
+      kSymbolBits(32 - __builtin_clz(kSymbols - 1)),
       kCodeBits(cbits) {
   assert(kCodeBits && (kCodeBits <= 8));
   Init(reinterpret_cast<const uint8_t*>(enc.data()));
 }
 Dict::Dict(const std::vector<uint32_t>& enc, uint8_t cbits)
     : kSymbols(enc.size()),
-      kSymbolBits(32 - __builtin_clz(kSymbols)),
+      kSymbolBits(32 - __builtin_clz(kSymbols - 1)),
       kCodeBits(cbits) {
   assert(kCodeBits && (kCodeBits <= 24));
   Init(reinterpret_cast<const uint8_t*>(enc.data()));
@@ -86,7 +86,7 @@ Dict::Dict(const char* inpath) {
 
   assert(kCodeBits && kCodeBits <= 24);
   assert(kSymbols && !(kSymbols >> kCodeBits));
-  assert(kSymbolBits == 32 - __builtin_clz(kSymbols));
+  assert(kSymbolBits == 32 - __builtin_clz(kSymbols - 1));
   assert(ebytes == 8 + (kSymbols << (kCodeBits <= 8 ? 1 : 2)));
 
   InitDec(ref, abytes - ebytes);
