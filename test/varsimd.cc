@@ -8,6 +8,7 @@
 #include "arm_sve.h"
 #include "gtest/gtest.h"
 #include "salloc.hh"
+#include "util.hh"
 #include "vsbytes.hh"
 
 #define INFO(fmt, ...) printf("[   INFO   ] " fmt, __VA_ARGS__);
@@ -35,8 +36,11 @@ class VarSIMDTest : public ::testing::Test {
   static void SetUpTestSuite() {
     INFO("RANDOM_SEED: %d\n", testing::UnitTest::GetInstance()->random_seed());
   }
+
  protected:
-  data_t data;
+  const char* kDictFmt = "../huff/test/dict%d.save";
+
+      data_t data;
   meta_t meta;
   inline svint32_t fixvec(int64_t x, int64_t y) {
     svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
@@ -109,6 +113,40 @@ class VarSIMDTest : public ::testing::Test {
     ans.second = sballoc(meta.size() + 4);
     BHSD_WS(ans.second) = meta.size();
     memcpy(ans.second + 4, meta.data(), meta.size());
+    return ans;
+  }
+
+  inline std::tuple<int8_t*, int8_t*, int8_t*> randHuff(uint64_t& bits) {
+    int d = URAND32() & 15;
+    char dicp[100];
+    sprintf(dicp, kDictFmt, d);
+    INFO("Huff dict path: %s\n", dicp);
+
+    int abytes = filesize(dicp);
+    FILE* di = fopen(dicp, "rb");
+    int8_t* enc = sballoc(abytes);
+    fread(enc, 1, abytes, di);
+    int8_t* dec = enc + BHSD_RS(enc);
+    const uint32_t kSymbols = BHSD_RS(dec);
+    uint8_t* data = (uint8_t*)sballoc((bits + 7) >> 3);
+    auto ans = std::make_tuple((int8_t*)data, enc, dec);
+    enc += 8;
+
+    uint32_t elems = 0;
+    uint64_t i = 0;
+    for (uint8_t pos = 0;; elems++) {
+      uint32_t x = URAND32() % kSymbols;
+      uint32_t e =
+          (dec[5] <= 8 ? BHSD_RH(enc + (x << 1)) : BHSD_RS(enc + (x << 2)));
+      uint8_t b = e & MASK(8);
+      if (i + b > bits) break;
+      PackBits(data, pos, b, e >> 8);
+      AdvanceBits(data, pos, b);
+      i += b;
+    }
+    bits = i;
+    BHSD_WS(dec) = elems;
+
     return ans;
   }
 
@@ -1164,6 +1202,49 @@ TEST_F(VarSIMDTest, fixstream_fixvec) {
   }
 }
 
+TEST_F(VarSIMDTest, huffstream_fixvec) {
+  uint64_t bits = URAND20();
+  auto [encoded, enc, dec] = randHuff(bits);
+  uint32_t bytes = (bits + 7) >> 3;
+  uint32_t elems = BHSD_RS(dec);
+
+  INFO("huffstream bits = %lu, elems = %u\n", bits, elems);
+  int8_t* dump = sballoc(bytes);
+  INFO("encoded = %p, dump = %p\n", encoded, dump);
+
+  int rid = hrstream(encoded, dec, bits);
+  int wid = hwstream(dump, enc);
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
+    if (enc[4] <= 8) {
+      svbool_t pg = svwhilelt_b8_u32(i, elems);
+      svint8_t v = svunpack_s8(rid);
+      n = svpack_s8(pg, v, wid);
+      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
+    } else if (enc[4] <= 16) {
+      svbool_t pg = svwhilelt_b16_u32(i, elems);
+      svint16_t v = svunpack_s16(rid);
+      n = svpack_s16(pg, v, wid);
+      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
+    } else {
+      svbool_t pg = svwhilelt_b32_u32(i, elems);
+      svint32_t v = svunpack_s32(rid);
+      n = svpack_s32(pg, v, wid);
+      EXPECT_EQ(n, i + svcntw() < elems ? svcntw() : elems - i);
+    }
+  }
+
+  uint32_t bitsleft = erstream(rid);
+  EXPECT_EQ(0U, bitsleft);
+  uint32_t bitsright = ewstream(wid);
+  EXPECT_EQ(bits, bitsright);
+
+  for (uint32_t i = 0; i < bytes; i++) {
+    EXPECT_EQ(encoded[i], dump[i]);
+  }
+}
+
 TEST_F(VarSIMDTest, varstream_fixvec) {
   uint32_t bits = URAND20();
   uint32_t bytes = (bits + 7) >> 3;
@@ -1229,6 +1310,38 @@ TEST_F(VarSIMDTest, fixstream_varvec) {
 
   int rid = frstream(encoded, width, bits);
   int wid = fwstream(dump, width);
+  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+
+  for (uint32_t i = 0, n = 0; i < elems; i += n) {
+    svint32_t v = svvunpack(svptrue_b8(), rid);
+    n = svvpack(svptrue_b8(), v, wid);
+    crstream(rid, n);
+    EXPECT_NE(0U, n);
+    EXPECT_GE(elems - i, n);
+  }
+
+  uint32_t bitsleft = erstream(rid);
+  EXPECT_EQ(0U, bitsleft);
+  uint32_t bitsright = ewstream(wid);
+  EXPECT_EQ(bits, bitsright);
+
+  for (uint32_t i = 0; i < bytes; i++) {
+    EXPECT_EQ(encoded[i], dump[i]);
+  }
+}
+
+TEST_F(VarSIMDTest, huffstream_varvec) {
+  uint64_t bits = URAND20();
+  auto [encoded, enc, dec] = randHuff(bits);
+  uint32_t bytes = (bits + 7) >> 3;
+  uint32_t elems = BHSD_RS(dec);
+
+  INFO("huffstream bits = %lu, elems = %u\n", bits, elems);
+  int8_t* dump = sballoc(bytes);
+  INFO("encoded = %p, dump = %p\n", encoded, dump);
+
+  int rid = hrstream(encoded, dec, bits);
+  int wid = hwstream(dump, enc);
   INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
 
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
