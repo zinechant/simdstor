@@ -117,13 +117,16 @@ class VarSIMDTest : public ::testing::Test {
   }
 
   inline std::tuple<int8_t*, int8_t*, int8_t*> randHuff(uint64_t& bits) {
+    const int kMaxDSize = 0x5000000;
+    static int8_t* enc = sballoc(kMaxDSize);
+
     int d = URAND32() & 15;
     char dicp[100];
     sprintf(dicp, kDictFmt, d);
-
     int abytes = filesize(dicp);
+    assert(abytes <= kMaxDSize);
+
     FILE* di = fopen(dicp, "rb");
-    int8_t* enc = sballoc(abytes);
     fread(enc, 1, abytes, di);
     int8_t* dec = enc + BHSD_RS(enc);
     const uint32_t kSymbols = BHSD_RS(dec);
