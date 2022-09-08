@@ -40,7 +40,7 @@ class VarSIMDTest : public ::testing::Test {
  protected:
   const char* kDictFmt = "../huff/test/dict%d.save";
 
-      data_t data;
+  data_t data;
   meta_t meta;
   inline svint32_t fixvec(int64_t x, int64_t y) {
     svuint8_t index = svand_m(svptrue_b8(), svindex_u8(0, 1), 3);
@@ -120,7 +120,6 @@ class VarSIMDTest : public ::testing::Test {
     int d = URAND32() & 15;
     char dicp[100];
     sprintf(dicp, kDictFmt, d);
-    INFO("Huff dict path: %s\n", dicp);
 
     int abytes = filesize(dicp);
     FILE* di = fopen(dicp, "rb");
@@ -131,6 +130,8 @@ class VarSIMDTest : public ::testing::Test {
     uint8_t* data = (uint8_t*)sballoc((bits + 7) >> 3);
     auto ans = std::make_tuple((int8_t*)data, enc, dec);
     enc += 8;
+
+    INFO("Huff dict path: %s, sbits = %u, cbits = %u\n", dicp, dec[4], dec[5]);
 
     uint32_t elems = 0;
     uint64_t i = 0;
