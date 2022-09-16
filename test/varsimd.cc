@@ -1319,7 +1319,7 @@ TEST_F(VarSIMDTest, fixstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, n);
+    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
   }
@@ -1351,7 +1351,7 @@ TEST_F(VarSIMDTest, huffstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, n);
+    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
   }
@@ -1388,7 +1388,7 @@ TEST_F(VarSIMDTest, varstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, n);
+    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
   }
