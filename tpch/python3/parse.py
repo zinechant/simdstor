@@ -9,7 +9,7 @@ import pyarrow.csv as csv
 import pyarrow.compute as pc
 from schema import SCHEMA
 
-SF = 0
+SF = 1
 table_pat = os.path.join(os.getenv("HOME"), "Downloads", "tpchv3_s1e%d" % SF,
                          "%s.tbl")
 rawd_pat = os.path.join(os.getenv("HOME"), "Downloads", "tpchv3_s1e%d" % SF,
