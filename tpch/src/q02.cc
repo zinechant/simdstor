@@ -77,17 +77,25 @@ void q2(int kind) {
     } else if (kind == 2) {
       for (int i = 0, n = 0; i < N; i += n) {
         svint32_t v_p_size = svvunpack(svptrue_b8(), p_size_si);
+        dprintf_vsv("vps", v_p_size);
         svbool_t pg = svvcmpeq(svptrue_b8(), v_p_size, 15);
+        dprintf_svbool("pg", pg);
 
         svint32_t v_p_partkey = svvunpack(pg, p_partkey_si);
+        dprintf_vsv("vpk", v_p_partkey);
         svint32_t v_p_mfgr = svvunpack(pg, p_mfgr_si);
+
 
         unsigned e1 = svvpack(pg, v_p_partkey, p_partkey_so);
         unsigned e2 = svvpack(pg, v_p_mfgr, p_mfgr_so);
 
         n = svvrcnum();
+        crstream(p_size_si, n);
+        crstream(p_partkey_si, n);
+        crstream(p_mfgr_si, n);
         assert(e1 == e2 && e1 <= (unsigned)n);
         elems += e1;
+        dprintf("elems: %u, e: %u, n: %d\n\n", elems, e1, n);
       }
     } else {
       fprintf(stderr, "%s", "No this kind!\n");

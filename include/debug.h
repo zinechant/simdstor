@@ -130,7 +130,8 @@ inline void _print_vb8(const char *prefix, vbool8_t vm, unsigned vl) {
 
 #ifdef __ARM_FEATURE_SVE
 #include <arm_sve.h>
-char __arr[32768];
+#include "vsbytes.hh"
+int8_t __arr[32768];
 
 inline void __print_svs8(const char *prefix, svint8_t v) {
   int8_t *arr = (int8_t *)__arr;
@@ -228,6 +229,81 @@ inline void __print_svu64(const char *prefix, svuint64_t v) {
   fflush(stderr);
 }
 
+inline void __print_svbool(const char *prefix, svbool_t pg) {
+  __print_svu8(prefix, svdup_n_u8_z(pg, 1));
+}
+
+inline void __print_vsv(const char *prefix, svint32_t v) {
+  int8_t *data = __arr;
+  int8_t *meta = __arr + (svcntb() << 1);
+  int n = svvstore(v, data, meta);
+  int nn = BHSD_RH(meta);
+  if (n != nn) {
+    fprintf(stderr, "ERROR! error! : n=%d, BHSD_RH(meta)=%d\n", n, nn);
+  }
+  fprintf(stderr, "%s:\tn=%d\t", prefix, n);
+
+  const uint8_t* pdata = (const uint8_t*)data;
+  const uint8_t* pmeta = (const uint8_t*)meta + 2;
+  for (int i = 0; i < n; i++) {
+    int64_t t = VSUnpackBytes(pdata, pmeta[i]);
+    fprintf(stderr, "%9lx ", t);
+  }
+  fprintf(stderr, "\n");
+  fflush(stderr);
+}
+
+#define dprintf_svs8(prefix, vx)                     \
+  do {                                               \
+    if (VERBOSE_LEVEL > 1) __print_svs8(prefix, vx); \
+  } while (0)
+
+#define dprintf_svu8(prefix, vx)                     \
+  do {                                               \
+    if (VERBOSE_LEVEL > 1) __print_svu8(prefix, vx); \
+  } while (0)
+
+#define dprintf_svs16(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svs16(prefix, vx); \
+  } while (0)
+
+#define dprintf_svu16(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svu16(prefix, vx); \
+  } while (0)
+
+#define dprintf_svs32(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svs32(prefix, vx); \
+  } while (0)
+
+#define dprintf_svu32(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svu32(prefix, vx); \
+  } while (0)
+
+#define dprintf_svs64(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svs64(prefix, vx); \
+  } while (0)
+
+#define dprintf_svu64(prefix, vx)                     \
+  do {                                                \
+    if (VERBOSE_LEVEL > 1) __print_svu64(prefix, vx); \
+  } while (0)
+
+#define dprintf_svbool(prefix, pg)                     \
+  do {                                                 \
+    if (VERBOSE_LEVEL > 1) __print_svbool(prefix, pg); \
+  } while (0)
+
+#define dprintf_vsv(prefix, vx)                     \
+  do {                                                 \
+    if (VERBOSE_LEVEL > 1) __print_vsv(prefix, vx); \
+  } while (0)
+
+
 #define iprintf_svs8(prefix, vx)                 \
   do {                                           \
     if (VERBOSE_LEVEL) __print_svs8(prefix, vx); \
@@ -266,6 +342,16 @@ inline void __print_svu64(const char *prefix, svuint64_t v) {
 #define iprintf_svu64(prefix, vx)                 \
   do {                                            \
     if (VERBOSE_LEVEL) __print_svu64(prefix, vx); \
+  } while (0)
+
+#define iprintf_svbool(prefix, pg)                 \
+  do {                                             \
+    if (VERBOSE_LEVEL) __print_svbool(prefix, pg); \
+  } while (0)
+
+#define iprintf_vsv(prefix, vx)                     \
+  do {                                                 \
+    if (VERBOSE_LEVEL) __print_vsv(prefix, vx); \
   } while (0)
 
 #endif  // __ARM_FEATURE_SVE
