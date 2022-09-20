@@ -23,6 +23,19 @@ void q2(int kind) {
           p_mfgr_i, p_partkey_o, p_mfgr_o);
 
   if (kind == 0) {
+    const int32_t* p_size_ia = (const int32_t*)p_size_i;
+    const int32_t* p_partkey_ia = (const int32_t*)p_partkey_i;
+    const int8_t* p_mfgr_ia = p_mfgr_i;
+    int32_t* p_partkey_oa = (int32_t*)p_partkey_o;
+    int8_t* p_mfgr_oa = p_mfgr_o;
+    for (int i = 0; i < N; i++) {
+      if (p_size_ia[i] == 15) {
+        p_partkey_oa[elems] = p_partkey_ia[i];
+        p_mfgr_oa[elems] = p_mfgr_ia[i];
+        elems++;
+      }
+    }
+  } else if (kind == 1) {
     int8_t* p_partkey_op = p_partkey_o;
     int8_t* p_mfgr_op = p_mfgr_o;
     for (int i = 0, n = svcntw(); i < N; i += n) {
@@ -60,7 +73,7 @@ void q2(int kind) {
             p_mfgr_si, p_partkey_so, p_mfgr_so);
     fflush(nullptr);
 
-    if (kind == 1) {
+    if (kind == 2) {
       for (int i = 0, n = svcntw(); i < N; i += n) {
         svbool_t pg = svwhilelt_b32_s32(i, N);
         svint32_t v_p_size = svunpack_s32(p_size_si);
@@ -74,7 +87,7 @@ void q2(int kind) {
         elems += e1;
         p_mfgr_i += n;
       }
-    } else if (kind == 2) {
+    } else if (kind == 3) {
       for (int i = 0, n = 0; i < N; i += n) {
         svint32_t v_p_size = svvunpack(svptrue_b8(), p_size_si);
         dprintf_vsv("vps", v_p_size);
@@ -84,7 +97,6 @@ void q2(int kind) {
         svint32_t v_p_partkey = svvunpack(pg, p_partkey_si);
         dprintf_vsv("vpk", v_p_partkey);
         svint32_t v_p_mfgr = svvunpack(pg, p_mfgr_si);
-
 
         unsigned e1 = svvpack(pg, v_p_partkey, p_partkey_so);
         unsigned e2 = svvpack(pg, v_p_mfgr, p_mfgr_so);
@@ -124,7 +136,7 @@ void q2(int kind) {
 }
 
 int main(int argc, char* argv[]) {
-  if (argc != 2 || argv[1][0] > '2' || argv[1][0] < '0') {
+  if (argc != 2 || argv[1][0] > '3' || argv[1][0] < '0') {
     fprintf(stderr, "Wrong Input! Usage: %s <0/1/2>\n", argv[0]);
     return 1;
   }
