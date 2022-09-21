@@ -30,6 +30,14 @@ else
 	ARCH = --gcc-toolchain=$(RISCV) --target=riscv64 -march=rv64imv1p0 -mabi=lp64
 endif
 
+ifneq ($(ARM),)
+ifneq ($(ARM),0)
+	INCLUDE += -I ${HOME}/gem5/include
+	LDFLAGS += -L ${HOME}/gem5/util/m5/build/arm64/out
+	LDLIBS += -lm5
+endif
+endif
+
 DIR:=$(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 CSRCS += $(shell ls $(DIR)/src/*.c 2> /dev/null)

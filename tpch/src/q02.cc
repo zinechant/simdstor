@@ -1,4 +1,5 @@
 #include <arm_sve.h>
+#include <gem5/m5ops.h>
 
 #include <cassert>
 #include <cstdio>
@@ -21,6 +22,8 @@ void q2(int kind) {
   int8_t* p_mfgr_o = sballoc(N);
   iprintf("p0=%p, p1=%p, p2=%p, p3=%p, p4=%p\n", p_size_i, p_partkey_i,
           p_mfgr_i, p_partkey_o, p_mfgr_o);
+
+  m5_reset_stats(0, 0);
 
   if (kind == 0) {
     const int32_t* p_size_ia = (const int32_t*)p_size_i;
@@ -125,6 +128,8 @@ void q2(int kind) {
     assert(b1 == (elems << 5));
     assert(b2 == (elems << 3));
   }
+
+  m5_dump_stats(0, 0);
 
   iprintf("Total #elems: %u\n", elems);
   std::string p_partkey_path("./p_partkey_0.bin");
