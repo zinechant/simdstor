@@ -1,0 +1,6 @@
+*
+!.gitignore
+!*.cc
+!*.sql
+!Makefile
+!*.sh

@@ -2,16 +2,14 @@
 #include <gem5/m5ops.h>
 
 #include <cassert>
-#include <cstdio>
-#include <cstdlib>
 #include <string>
 
 #include "debug.h"
 #include "salloc.hh"
 
-const std::string tdir = std::string("./data/");
+extern const std::string tdir;
 
-void q2(int kind) {
+void q02_part(int kind) {
   const int N = 200000;
   unsigned elems = 0;
   int8_t* p_size_i = filedata((tdir + "part/p_size.bin").c_str());
@@ -138,14 +136,4 @@ void q2(int kind) {
   p_mfgr_path[p_mfgr_path.length() - 5] += kind;
   filewrite(p_partkey_path.c_str(), elems << 5, p_partkey_o);
   filewrite(p_mfgr_path.c_str(), elems << 3, p_mfgr_o);
-}
-
-int main(int argc, char* argv[]) {
-  if (argc != 2 || argv[1][0] > '3' || argv[1][0] < '0') {
-    fprintf(stderr, "Wrong Input! Usage: %s <0/1/2>\n", argv[0]);
-    return 1;
-  }
-  q2(argv[1][0] - '0');
-
-  return 0;
 }
