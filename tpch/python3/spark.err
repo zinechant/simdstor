@@ -1,0 +1,800 @@
+Q121.err.txt:22/01/12 02:22:47 INFO V2ScanRelationPushDown:
+Q121.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q121.err.txt-Pushed Filters: LessThanOrEqual(l_shipdate,1998-09-02)
+Q121.err.txt-Post-Scan Filters:
+Q121.err.txt-Output: l_quantity#4, l_extendedprice#5, l_discount#6, l_tax#7, l_returnflag#8, l_linestatus#9
+Q121.err.txt:22/01/12 02:22:48 INFO V2ScanRelationPushDown:
+Q121.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q121.err.txt-Pushed Filters: LessThanOrEqual(l_shipdate,1998-09-02)
+Q121.err.txt-Post-Scan Filters:
+Q121.err.txt-Output: l_quantity#4, l_extendedprice#5, l_discount#6, l_tax#7, l_returnflag#8, l_linestatus#9
+Q122.err.txt:22/01/12 17:07:38 INFO V2ScanRelationPushDown:
+Q122.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q122.err.txt-Pushed Filters: EqualTo(p_size,15), StringEndsWith(p_type,BRASS)
+Q122.err.txt-Post-Scan Filters:
+Q122.err.txt-Output: p_partkey#64, p_mfgr#66
+Q122.err.txt:22/01/12 17:07:38 INFO V2ScanRelationPushDown:
+Q122.err.txt-Pushing operators to region@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/region
+Q122.err.txt-Pushed Filters: EqualTo(r_name,EUROPE)
+Q122.err.txt-Post-Scan Filters:
+Q122.err.txt-Output: r_regionkey#58
+Q122.err.txt:22/01/12 17:07:38 INFO V2ScanRelationPushDown:
+Q122.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q122.err.txt-Pushed Filters:
+Q122.err.txt-Post-Scan Filters:
+Q122.err.txt-Output: n_nationkey#32, n_name#33, n_regionkey#34
+Q122.err.txt:22/01/12 17:07:38 INFO V2ScanRelationPushDown:
+Q122.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q122.err.txt-Pushed Filters:
+Q122.err.txt-Post-Scan Filters:
+Q122.err.txt-Output: s_suppkey#98, s_name#99, s_address#100, s_nationkey#101, s_phone#102, s_acctbal#103, s_comment#104
+Q122.err.txt:22/01/12 17:07:38 INFO V2ScanRelationPushDown:
+Q122.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q122.err.txt-Pushed Filters:
+Q122.err.txt-Post-Scan Filters:
+Q122.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_supplycost#115
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q123.err.txt-Pushed Filters: EqualTo(c_mktsegment,BUILDING)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: c_custkey#82
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q123.err.txt-Pushed Filters: LessThan(o_orderdate,1995-03-15)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: o_orderkey#40, o_custkey#41, o_orderdate#44, o_shippriority#47
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q123.err.txt-Pushed Filters: GreaterThan(l_shipdate,1995-03-15)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: l_orderkey#0, l_extendedprice#5, l_discount#6
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q123.err.txt-Pushed Filters: EqualTo(c_mktsegment,BUILDING)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: c_custkey#82
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q123.err.txt-Pushed Filters: LessThan(o_orderdate,1995-03-15)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: o_orderkey#40, o_custkey#41, o_orderdate#44, o_shippriority#47
+Q123.err.txt:22/01/12 02:28:06 INFO V2ScanRelationPushDown:
+Q123.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q123.err.txt-Pushed Filters: GreaterThan(l_shipdate,1995-03-15)
+Q123.err.txt-Post-Scan Filters:
+Q123.err.txt-Output: l_orderkey#0, l_extendedprice#5, l_discount#6
+Q124.err.txt:22/01/12 02:28:35 INFO V2ScanRelationPushDown:
+Q124.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q124.err.txt-Pushed Filters:
+Q124.err.txt-Post-Scan Filters: (l_commitdate#11 < l_receiptdate#12)
+Q124.err.txt-Output: l_orderkey#0, l_commitdate#11, l_receiptdate#12
+Q124.err.txt:22/01/12 02:28:35 INFO V2ScanRelationPushDown:
+Q124.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q124.err.txt-Pushed Filters: GreaterThanOrEqual(o_orderdate,1993-07-01), LessThan(o_orderdate,1993-10-01)
+Q124.err.txt-Post-Scan Filters:
+Q124.err.txt-Output: o_orderkey#40, o_orderpriority#45
+Q124.err.txt:22/01/12 02:28:35 INFO V2ScanRelationPushDown:
+Q124.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q124.err.txt-Pushed Filters:
+Q124.err.txt-Post-Scan Filters: (l_commitdate#11 < l_receiptdate#12)
+Q124.err.txt-Output: l_orderkey#0, l_commitdate#11, l_receiptdate#12
+Q124.err.txt:22/01/12 02:28:35 INFO V2ScanRelationPushDown:
+Q124.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q124.err.txt-Pushed Filters: GreaterThanOrEqual(o_orderdate,1993-07-01), LessThan(o_orderdate,1993-10-01)
+Q124.err.txt-Post-Scan Filters:
+Q124.err.txt-Output: o_orderkey#40, o_orderpriority#45
+Q125.err.txt:22/01/12 02:29:09 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to region@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/region
+Q125.err.txt-Pushed Filters: EqualTo(r_name,ASIA)
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: r_regionkey#58
+Q125.err.txt:22/01/12 02:29:09 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: n_nationkey#32, n_name#33, n_regionkey#34
+Q125.err.txt:22/01/12 02:29:09 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q125.err.txt:22/01/12 02:29:09 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: l_orderkey#0, l_suppkey#2, l_extendedprice#5, l_discount#6
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q125.err.txt-Pushed Filters: LessThan(o_orderdate,1995-01-01), GreaterThanOrEqual(o_orderdate,1994-01-01)
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: o_orderkey#40, o_custkey#41
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: c_custkey#82, c_nationkey#85
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to region@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/region
+Q125.err.txt-Pushed Filters: EqualTo(r_name,ASIA)
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: r_regionkey#58
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: n_nationkey#32, n_name#33, n_regionkey#34
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: l_orderkey#0, l_suppkey#2, l_extendedprice#5, l_discount#6
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q125.err.txt-Pushed Filters: LessThan(o_orderdate,1995-01-01), GreaterThanOrEqual(o_orderdate,1994-01-01)
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: o_orderkey#40, o_custkey#41
+Q125.err.txt:22/01/12 02:29:10 INFO V2ScanRelationPushDown:
+Q125.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q125.err.txt-Pushed Filters:
+Q125.err.txt-Post-Scan Filters:
+Q125.err.txt-Output: c_custkey#82, c_nationkey#85
+Q126.err.txt:22/01/12 02:29:48 INFO V2ScanRelationPushDown:
+Q126.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q126.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1994-01-01), LessThan(l_shipdate,1995-01-01), GreaterThanOrEqual(l_discount,0.05), LessThanOrEqual(l_discount,0.07), LessThan(l_quantity,24.00)
+Q126.err.txt-Post-Scan Filters:
+Q126.err.txt-Output: l_extendedprice#5, l_discount#6
+Q126.err.txt:22/01/12 02:29:49 INFO V2ScanRelationPushDown:
+Q126.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q126.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1994-01-01), LessThan(l_shipdate,1995-01-01), GreaterThanOrEqual(l_discount,0.05), LessThanOrEqual(l_discount,0.07), LessThan(l_quantity,24.00)
+Q126.err.txt-Post-Scan Filters:
+Q126.err.txt-Output: l_extendedprice#5, l_discount#6
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q127.err.txt-Pushed Filters: Or(EqualTo(n_name,FRANCE),EqualTo(n_name,GERMANY))
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: n_nationkey#32, n_name#33
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: c_custkey#82, c_nationkey#85
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: o_orderkey#40, o_custkey#41
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q127.err.txt-Pushed Filters: Or(EqualTo(n_name,FRANCE),EqualTo(n_name,GERMANY))
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: n_nationkey#32, n_name#33
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q127.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1995-01-01), LessThanOrEqual(l_shipdate,1996-12-31)
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: l_orderkey#0, l_suppkey#2, l_extendedprice#5, l_discount#6, l_shipdate#10
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q127.err.txt-Pushed Filters: Or(EqualTo(n_name,FRANCE),EqualTo(n_name,GERMANY))
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: n_nationkey#32, n_name#33
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: c_custkey#82, c_nationkey#85
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: o_orderkey#40, o_custkey#41
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q127.err.txt-Pushed Filters: Or(EqualTo(n_name,FRANCE),EqualTo(n_name,GERMANY))
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: n_nationkey#32, n_name#33
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q127.err.txt-Pushed Filters:
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q127.err.txt:22/01/12 02:30:02 INFO V2ScanRelationPushDown:
+Q127.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q127.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1995-01-01), LessThanOrEqual(l_shipdate,1996-12-31)
+Q127.err.txt-Post-Scan Filters:
+Q127.err.txt-Output: l_orderkey#0, l_suppkey#2, l_extendedprice#5, l_discount#6, l_shipdate#10
+Q128.err.txt:22/01/12 02:30:34 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: n_nationkey#32, n_regionkey#34
+Q128.err.txt:22/01/12 02:30:34 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to region@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/region
+Q128.err.txt-Pushed Filters: EqualTo(r_name,AMERICA)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: r_regionkey#58
+Q128.err.txt:22/01/12 02:30:34 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: c_custkey#82, c_nationkey#85
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q128.err.txt-Pushed Filters: LessThanOrEqual(o_orderdate,1996-12-31), GreaterThanOrEqual(o_orderdate,1995-01-01)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: o_orderkey#40, o_custkey#41, o_orderdate#44
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: l_orderkey#0, l_partkey#1, l_suppkey#2, l_extendedprice#5, l_discount#6
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q128.err.txt-Pushed Filters: EqualTo(p_type,ECONOMY ANODIZED STEEL)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: p_partkey#64
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: n_nationkey#32, n_name#33
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: n_nationkey#32, n_regionkey#34
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to region@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/region
+Q128.err.txt-Pushed Filters: EqualTo(r_name,AMERICA)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: r_regionkey#58
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: c_custkey#82, c_nationkey#85
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q128.err.txt-Pushed Filters: LessThanOrEqual(o_orderdate,1996-12-31), GreaterThanOrEqual(o_orderdate,1995-01-01)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: o_orderkey#40, o_custkey#41, o_orderdate#44
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: l_orderkey#0, l_partkey#1, l_suppkey#2, l_extendedprice#5, l_discount#6
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q128.err.txt-Pushed Filters: EqualTo(p_type,ECONOMY ANODIZED STEEL)
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: p_partkey#64
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: n_nationkey#32, n_name#33
+Q128.err.txt:22/01/12 02:30:35 INFO V2ScanRelationPushDown:
+Q128.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q128.err.txt-Pushed Filters:
+Q128.err.txt-Post-Scan Filters:
+Q128.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q129.err.txt-Pushed Filters: StringContains(p_name,green)
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: p_partkey#64
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: l_orderkey#0, l_partkey#1, l_suppkey#2, l_quantity#4, l_extendedprice#5, l_discount#6
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: n_nationkey#32, n_name#33
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_supplycost#115
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: o_orderkey#40, o_orderdate#44
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q129.err.txt-Pushed Filters: StringContains(p_name,green)
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: p_partkey#64
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: l_orderkey#0, l_partkey#1, l_suppkey#2, l_quantity#4, l_extendedprice#5, l_discount#6
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: n_nationkey#32, n_name#33
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_supplycost#115
+Q129.err.txt:22/01/12 02:31:16 INFO V2ScanRelationPushDown:
+Q129.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q129.err.txt-Pushed Filters:
+Q129.err.txt-Post-Scan Filters:
+Q129.err.txt-Output: o_orderkey#40, o_orderdate#44
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q130.err.txt-Pushed Filters: LessThan(o_orderdate,1994-01-01), GreaterThanOrEqual(o_orderdate,1993-10-01)
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: o_orderkey#40, o_custkey#41
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q130.err.txt-Pushed Filters:
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: c_custkey#82, c_name#83, c_address#84, c_nationkey#85, c_phone#86, c_acctbal#87, c_comment#89
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q130.err.txt-Pushed Filters:
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: n_nationkey#32, n_name#33
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q130.err.txt-Pushed Filters: EqualTo(l_returnflag,R)
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: l_orderkey#0, l_extendedprice#5, l_discount#6
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q130.err.txt-Pushed Filters: LessThan(o_orderdate,1994-01-01), GreaterThanOrEqual(o_orderdate,1993-10-01)
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: o_orderkey#40, o_custkey#41
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q130.err.txt-Pushed Filters:
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: c_custkey#82, c_name#83, c_address#84, c_nationkey#85, c_phone#86, c_acctbal#87, c_comment#89
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q130.err.txt-Pushed Filters:
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: n_nationkey#32, n_name#33
+Q130.err.txt:22/01/12 02:32:11 INFO V2ScanRelationPushDown:
+Q130.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q130.err.txt-Pushed Filters: EqualTo(l_returnflag,R)
+Q130.err.txt-Post-Scan Filters:
+Q130.err.txt-Output: l_orderkey#0, l_extendedprice#5, l_discount#6
+Q131.err.txt:22/01/12 02:32:38 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q131.err.txt-Pushed Filters: EqualTo(n_name,GERMANY)
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: n_nationkey#32
+Q131.err.txt:22/01/12 02:32:38 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q131.err.txt:22/01/12 02:32:38 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_availqty#114, ps_supplycost#115
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q131.err.txt-Pushed Filters: EqualTo(n_name,GERMANY)
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: n_nationkey#32
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_availqty#114, ps_supplycost#115
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q131.err.txt-Pushed Filters: EqualTo(n_name,GERMANY)
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: n_nationkey#32
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: s_suppkey#98, s_nationkey#101
+Q131.err.txt:22/01/12 02:32:47 INFO V2ScanRelationPushDown:
+Q131.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q131.err.txt-Pushed Filters:
+Q131.err.txt-Post-Scan Filters:
+Q131.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_availqty#114, ps_supplycost#115
+Q132.err.txt:22/01/12 02:33:04 INFO V2ScanRelationPushDown:
+Q132.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q132.err.txt-Pushed Filters: Or(EqualTo(l_shipmode,MAIL),EqualTo(l_shipmode,SHIP)), GreaterThanOrEqual(l_receiptdate,1994-01-01), LessThan(l_receiptdate,1995-01-01)
+Q132.err.txt-Post-Scan Filters: (l_commitdate#11 < l_receiptdate#12),(l_shipdate#10 < l_commitdate#11)
+Q132.err.txt-Output: l_orderkey#0, l_shipdate#10, l_commitdate#11, l_receiptdate#12, l_shipmode#14
+Q132.err.txt:22/01/12 02:33:04 INFO V2ScanRelationPushDown:
+Q132.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q132.err.txt-Pushed Filters:
+Q132.err.txt-Post-Scan Filters:
+Q132.err.txt-Output: o_orderkey#40, o_orderpriority#45
+Q132.err.txt:22/01/12 02:33:04 INFO V2ScanRelationPushDown:
+Q132.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q132.err.txt-Pushed Filters: Or(EqualTo(l_shipmode,MAIL),EqualTo(l_shipmode,SHIP)), GreaterThanOrEqual(l_receiptdate,1994-01-01), LessThan(l_receiptdate,1995-01-01)
+Q132.err.txt-Post-Scan Filters: (l_commitdate#11 < l_receiptdate#12),(l_shipdate#10 < l_commitdate#11)
+Q132.err.txt-Output: l_orderkey#0, l_shipdate#10, l_commitdate#11, l_receiptdate#12, l_shipmode#14
+Q132.err.txt:22/01/12 02:33:04 INFO V2ScanRelationPushDown:
+Q132.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q132.err.txt-Pushed Filters:
+Q132.err.txt-Post-Scan Filters:
+Q132.err.txt-Output: o_orderkey#40, o_orderpriority#45
+Q133.err.txt:22/01/12 02:33:34 INFO V2ScanRelationPushDown:
+Q133.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q133.err.txt-Pushed Filters:
+Q133.err.txt-Post-Scan Filters:
+Q133.err.txt-Output: c_custkey#82
+Q133.err.txt:22/01/12 02:33:34 INFO V2ScanRelationPushDown:
+Q133.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q133.err.txt-Pushed Filters:
+Q133.err.txt-Post-Scan Filters: NOT UDF(o_comment#48)
+Q133.err.txt-Output: o_orderkey#40, o_custkey#41, o_comment#48
+Q133.err.txt:22/01/12 02:33:34 INFO V2ScanRelationPushDown:
+Q133.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q133.err.txt-Pushed Filters:
+Q133.err.txt-Post-Scan Filters:
+Q133.err.txt-Output: c_custkey#82
+Q133.err.txt:22/01/12 02:33:34 INFO V2ScanRelationPushDown:
+Q133.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q133.err.txt-Pushed Filters:
+Q133.err.txt-Post-Scan Filters: NOT UDF(o_comment#48)
+Q133.err.txt-Output: o_orderkey#40, o_custkey#41, o_comment#48
+Q134.err.txt:22/01/12 02:33:55 INFO V2ScanRelationPushDown:
+Q134.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q134.err.txt-Pushed Filters:
+Q134.err.txt-Post-Scan Filters:
+Q134.err.txt-Output: p_partkey#64, p_type#68
+Q134.err.txt:22/01/12 02:33:55 INFO V2ScanRelationPushDown:
+Q134.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q134.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1995-09-01), LessThan(l_shipdate,1995-10-01)
+Q134.err.txt-Post-Scan Filters:
+Q134.err.txt-Output: l_partkey#1, l_extendedprice#5, l_discount#6
+Q134.err.txt:22/01/12 02:33:56 INFO V2ScanRelationPushDown:
+Q134.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q134.err.txt-Pushed Filters:
+Q134.err.txt-Post-Scan Filters:
+Q134.err.txt-Output: p_partkey#64, p_type#68
+Q134.err.txt:22/01/12 02:33:56 INFO V2ScanRelationPushDown:
+Q134.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q134.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1995-09-01), LessThan(l_shipdate,1995-10-01)
+Q134.err.txt-Post-Scan Filters:
+Q134.err.txt-Output: l_partkey#1, l_extendedprice#5, l_discount#6
+Q135.err.txt:22/01/12 02:34:12 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q135.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1996-01-01), LessThan(l_shipdate,1996-04-01)
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: l_suppkey#2, l_extendedprice#5, l_discount#6
+Q135.err.txt:22/01/12 02:34:12 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q135.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1996-01-01), LessThan(l_shipdate,1996-04-01)
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: l_suppkey#2, l_extendedprice#5, l_discount#6
+Q135.err.txt:22/01/12 02:34:12 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q135.err.txt-Pushed Filters:
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: s_suppkey#98, s_name#99, s_address#100, s_phone#102
+Q135.err.txt:22/01/12 02:34:13 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q135.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1996-01-01), LessThan(l_shipdate,1996-04-01)
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: l_suppkey#2, l_extendedprice#5, l_discount#6
+Q135.err.txt:22/01/12 02:34:13 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q135.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1996-01-01), LessThan(l_shipdate,1996-04-01)
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: l_suppkey#2, l_extendedprice#5, l_discount#6
+Q135.err.txt:22/01/12 02:34:13 INFO V2ScanRelationPushDown:
+Q135.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q135.err.txt-Pushed Filters:
+Q135.err.txt-Post-Scan Filters:
+Q135.err.txt-Output: s_suppkey#98, s_name#99, s_address#100, s_phone#102
+Q136.err.txt:22/01/12 02:34:34 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q136.err.txt-Pushed Filters:
+Q136.err.txt-Post-Scan Filters: NOT UDF(s_comment#104)
+Q136.err.txt-Output: s_suppkey#98, s_comment#104
+Q136.err.txt:22/01/12 02:34:34 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q136.err.txt-Pushed Filters:
+Q136.err.txt-Post-Scan Filters:
+Q136.err.txt-Output: ps_partkey#112, ps_suppkey#113
+Q136.err.txt:22/01/12 02:34:35 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q136.err.txt-Pushed Filters: Not(EqualTo(p_brand,Brand#45)), Not(StringStartsWith(p_type,MEDIUM POLISHED)), Or(Or(Or(Or(Or(Or(Or(EqualTo(p_size,3),EqualTo(p_size,9)),EqualTo(p_size,14)),EqualTo(p_size,19)),EqualTo(p_size,23)),EqualTo(p_size,36)),EqualTo(p_size,45)),EqualTo(p_size,49))
+Q136.err.txt-Post-Scan Filters:
+Q136.err.txt-Output: p_partkey#64, p_brand#67, p_type#68, p_size#69
+Q136.err.txt:22/01/12 02:34:35 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q136.err.txt-Pushed Filters:
+Q136.err.txt-Post-Scan Filters: NOT UDF(s_comment#104)
+Q136.err.txt-Output: s_suppkey#98, s_comment#104
+Q136.err.txt:22/01/12 02:34:35 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q136.err.txt-Pushed Filters:
+Q136.err.txt-Post-Scan Filters:
+Q136.err.txt-Output: ps_partkey#112, ps_suppkey#113
+Q136.err.txt:22/01/12 02:34:35 INFO V2ScanRelationPushDown:
+Q136.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q136.err.txt-Pushed Filters: Not(EqualTo(p_brand,Brand#45)), Not(StringStartsWith(p_type,MEDIUM POLISHED)), Or(Or(Or(Or(Or(Or(Or(EqualTo(p_size,3),EqualTo(p_size,9)),EqualTo(p_size,14)),EqualTo(p_size,19)),EqualTo(p_size,23)),EqualTo(p_size,36)),EqualTo(p_size,45)),EqualTo(p_size,49))
+Q136.err.txt-Post-Scan Filters:
+Q136.err.txt-Output: p_partkey#64, p_brand#67, p_type#68, p_size#69
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q137.err.txt-Pushed Filters: EqualTo(p_brand,Brand#23), EqualTo(p_container,MED BOX)
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: p_partkey#64
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q137.err.txt-Pushed Filters:
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: l_partkey#1, l_quantity#4
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q137.err.txt-Pushed Filters: EqualTo(p_brand,Brand#23), EqualTo(p_container,MED BOX)
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: p_partkey#64
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q137.err.txt-Pushed Filters:
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: l_partkey#1, l_quantity#4, l_extendedprice#5
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q137.err.txt-Pushed Filters: EqualTo(p_brand,Brand#23), EqualTo(p_container,MED BOX)
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: p_partkey#64
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q137.err.txt-Pushed Filters:
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: l_partkey#1, l_quantity#4
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q137.err.txt-Pushed Filters: EqualTo(p_brand,Brand#23), EqualTo(p_container,MED BOX)
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: p_partkey#64
+Q137.err.txt:22/01/12 02:34:45 INFO V2ScanRelationPushDown:
+Q137.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q137.err.txt-Pushed Filters:
+Q137.err.txt-Post-Scan Filters:
+Q137.err.txt-Output: l_partkey#1, l_quantity#4, l_extendedprice#5
+Q138.err.txt:22/01/12 02:35:32 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: l_orderkey#0, l_quantity#4
+Q138.err.txt:22/01/12 02:35:32 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: o_orderkey#40, o_custkey#41, o_totalprice#43, o_orderdate#44
+Q138.err.txt:22/01/12 02:35:32 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: l_orderkey#0, l_quantity#4
+Q138.err.txt:22/01/12 02:35:32 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: c_custkey#82, c_name#83
+Q138.err.txt:22/01/12 02:35:33 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: l_orderkey#0, l_quantity#4
+Q138.err.txt:22/01/12 02:35:33 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: o_orderkey#40, o_custkey#41, o_totalprice#43, o_orderdate#44
+Q138.err.txt:22/01/12 02:35:33 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: l_orderkey#0, l_quantity#4
+Q138.err.txt:22/01/12 02:35:33 INFO V2ScanRelationPushDown:
+Q138.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q138.err.txt-Pushed Filters:
+Q138.err.txt-Post-Scan Filters:
+Q138.err.txt-Output: c_custkey#82, c_name#83
+Q139.err.txt:22/01/12 02:36:28 INFO V2ScanRelationPushDown:
+Q139.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q139.err.txt-Pushed Filters: GreaterThanOrEqual(p_size,1)
+Q139.err.txt-Post-Scan Filters: (((((p_brand#67 = Brand#12) AND UDF(p_container#70)) AND (p_size#69 <= 5)) OR (((p_brand#67 = Brand#23) AND UDF(p_container#70)) AND (p_size#69 <= 10))) OR (((p_brand#67 = Brand#34) AND UDF(p_container#70)) AND (p_size#69 <= 15)))
+Q139.err.txt-Output: p_partkey#64, p_brand#67, p_size#69, p_container#70
+Q139.err.txt:22/01/12 02:36:28 INFO V2ScanRelationPushDown:
+Q139.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q139.err.txt-Pushed Filters: Or(EqualTo(l_shipmode,AIR),EqualTo(l_shipmode,AIR)), EqualTo(l_shipinstruct,DELIVER IN PERSON), GreaterThanOrEqual(l_quantity,1.00), LessThanOrEqual(l_quantity,30.00)
+Q139.err.txt-Post-Scan Filters:
+Q139.err.txt-Output: l_partkey#1, l_quantity#4, l_extendedprice#5, l_discount#6
+Q139.err.txt:22/01/12 02:36:29 INFO V2ScanRelationPushDown:
+Q139.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q139.err.txt-Pushed Filters: GreaterThanOrEqual(p_size,1)
+Q139.err.txt-Post-Scan Filters: (((((p_brand#67 = Brand#12) AND UDF(p_container#70)) AND (p_size#69 <= 5)) OR (((p_brand#67 = Brand#23) AND UDF(p_container#70)) AND (p_size#69 <= 10))) OR (((p_brand#67 = Brand#34) AND UDF(p_container#70)) AND (p_size#69 <= 15)))
+Q139.err.txt-Output: p_partkey#64, p_brand#67, p_size#69, p_container#70
+Q139.err.txt:22/01/12 02:36:29 INFO V2ScanRelationPushDown:
+Q139.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q139.err.txt-Pushed Filters: Or(EqualTo(l_shipmode,AIR),EqualTo(l_shipmode,AIR)), EqualTo(l_shipinstruct,DELIVER IN PERSON), GreaterThanOrEqual(l_quantity,1.00), LessThanOrEqual(l_quantity,30.00)
+Q139.err.txt-Post-Scan Filters:
+Q139.err.txt-Output: l_partkey#1, l_quantity#4, l_extendedprice#5, l_discount#6
+Q140.err.txt:22/01/12 02:36:41 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q140.err.txt-Pushed Filters: StringStartsWith(p_name,forest)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: p_partkey#64
+Q140.err.txt:22/01/12 02:36:41 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q140.err.txt-Pushed Filters:
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_availqty#114
+Q140.err.txt:22/01/12 02:36:41 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q140.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1994-01-01), LessThan(l_shipdate,1995-01-01)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: l_partkey#1, l_suppkey#2, l_quantity#4
+Q140.err.txt:22/01/12 02:36:41 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q140.err.txt-Pushed Filters:
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: s_suppkey#98, s_name#99, s_address#100, s_nationkey#101
+Q140.err.txt:22/01/12 02:36:41 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q140.err.txt-Pushed Filters: EqualTo(n_name,CANADA)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: n_nationkey#32
+Q140.err.txt:22/01/12 02:36:42 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to part@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/part
+Q140.err.txt-Pushed Filters: StringStartsWith(p_name,forest)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: p_partkey#64
+Q140.err.txt:22/01/12 02:36:42 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to partsupp@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/partsupp
+Q140.err.txt-Pushed Filters:
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: ps_partkey#112, ps_suppkey#113, ps_availqty#114
+Q140.err.txt:22/01/12 02:36:42 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q140.err.txt-Pushed Filters: GreaterThanOrEqual(l_shipdate,1994-01-01), LessThan(l_shipdate,1995-01-01)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: l_partkey#1, l_suppkey#2, l_quantity#4
+Q140.err.txt:22/01/12 02:36:42 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q140.err.txt-Pushed Filters:
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: s_suppkey#98, s_name#99, s_address#100, s_nationkey#101
+Q140.err.txt:22/01/12 02:36:42 INFO V2ScanRelationPushDown:
+Q140.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q140.err.txt-Pushed Filters: EqualTo(n_name,CANADA)
+Q140.err.txt-Post-Scan Filters:
+Q140.err.txt-Output: n_nationkey#32
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q141.err.txt-Pushed Filters: EqualTo(n_name,SAUDI ARABIA)
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: n_nationkey#32
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: s_suppkey#98, s_name#99, s_nationkey#101
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters: (l_receiptdate#12 > l_commitdate#11)
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2, l_commitdate#11, l_receiptdate#12
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q141.err.txt-Pushed Filters: EqualTo(o_orderstatus,F)
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: o_orderkey#40
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters: (l_receiptdate#12 > l_commitdate#11)
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2, l_commitdate#11, l_receiptdate#12
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to nation@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/nation
+Q141.err.txt-Pushed Filters: EqualTo(n_name,SAUDI ARABIA)
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: n_nationkey#32
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to supplier@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/supplier
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: s_suppkey#98, s_name#99, s_nationkey#101
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters: (l_receiptdate#12 > l_commitdate#11)
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2, l_commitdate#11, l_receiptdate#12
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q141.err.txt-Pushed Filters: EqualTo(o_orderstatus,F)
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: o_orderkey#40
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters:
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2
+Q141.err.txt:22/01/12 02:37:13 INFO V2ScanRelationPushDown:
+Q141.err.txt-Pushing operators to lineitem@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/lineitem
+Q141.err.txt-Pushed Filters:
+Q141.err.txt-Post-Scan Filters: (l_receiptdate#12 > l_commitdate#11)
+Q141.err.txt-Output: l_orderkey#0, l_suppkey#2, l_commitdate#11, l_receiptdate#12
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q142.err.txt-Pushed Filters:
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: o_custkey#41
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q142.err.txt-Pushed Filters: Or(Or(Or(Or(Or(Or(StringStartsWith(c_phone,13),StringStartsWith(c_phone,31)),StringStartsWith(c_phone,23)),StringStartsWith(c_phone,29)),StringStartsWith(c_phone,30)),StringStartsWith(c_phone,18)),StringStartsWith(c_phone,17))
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: c_custkey#82, c_phone#86, c_acctbal#87
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q142.err.txt-Pushed Filters: Or(Or(Or(Or(Or(Or(StringStartsWith(c_phone,13),StringStartsWith(c_phone,31)),StringStartsWith(c_phone,23)),StringStartsWith(c_phone,29)),StringStartsWith(c_phone,30)),StringStartsWith(c_phone,18)),StringStartsWith(c_phone,17)), GreaterThan(c_acctbal,0.00)
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: c_acctbal#87
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to order@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/order
+Q142.err.txt-Pushed Filters:
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: o_custkey#41
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q142.err.txt-Pushed Filters: Or(Or(Or(Or(Or(Or(StringStartsWith(c_phone,13),StringStartsWith(c_phone,31)),StringStartsWith(c_phone,23)),StringStartsWith(c_phone,29)),StringStartsWith(c_phone,30)),StringStartsWith(c_phone,18)),StringStartsWith(c_phone,17))
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: c_custkey#82, c_phone#86, c_acctbal#87
+Q142.err.txt:22/01/12 02:38:34 INFO V2ScanRelationPushDown:
+Q142.err.txt-Pushing operators to customer@file:///home/chenzou/udpstorage/tpch/tbl_s1e1/customer
+Q142.err.txt-Pushed Filters: Or(Or(Or(Or(Or(Or(StringStartsWith(c_phone,13),StringStartsWith(c_phone,31)),StringStartsWith(c_phone,23)),StringStartsWith(c_phone,29)),StringStartsWith(c_phone,30)),StringStartsWith(c_phone,18)),StringStartsWith(c_phone,17)), GreaterThan(c_acctbal,0.00)
+Q142.err.txt-Post-Scan Filters:
+Q142.err.txt-Output: c_acctbal#87
