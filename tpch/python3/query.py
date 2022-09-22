@@ -132,11 +132,7 @@ def columns(match, schema):
     return cols
 
 
-def res(ls):
-    qid = int(re.match(RES[0], ls[0])[1])
-    tab = re.match(RES[1], ls[1])[1]
-    schema = SCHEMA[tab]
-
+def res(schema, ls):
     filters = pushed(re.match(RES[2], ls[2]), schema)
     if filters is None:
         return None
@@ -154,7 +150,7 @@ def res(ls):
 
 
 def query(logpath, jsonpath):
-    ans = []
+    ans = {}
     ls = [None] * 5
     with open(logpath, "r") as fi:
         for l in fi:
@@ -165,18 +161,30 @@ def query(logpath, jsonpath):
 
             la = " | ".join(ls)
             if ls[2][-1] == ":" and ls[3][-1] == ":":
-                logging.info("Ignoring %s" % la)
-            if "String" in la or "UDF" in la:
-                logging.info("Ignoring %s" % la)
+                logging.info("Ignoring EmptyFs\t %s" % la)
                 continue
-            query = res(ls)
+            if "String" in la or "UDF" in la:
+                logging.info("Ignoring StringUDF\t %s" % la)
+                continue
+
+            qid = int(re.match(RES[0], ls[0])[1]) - 20
+            tab = re.match(RES[1], ls[1])[1]
+            schema = SCHEMA[tab]
+            query = res(schema, ls)
             if query is None:
-                logging.info("Ignoring %s" % la)
+                logging.info("Ignoring StringCol\t %s" % la)
             else:
-                ans.append(query)
+                if qid not in ans:
+                    ans[qid] = {}
+                if tab in ans[qid]:
+                    if query != ans[qid][tab]:
+                        logging.error("Unequal filters: %s -- %s" %
+                                      (str(ans[qid][tab]), str(query)))
+                else:
+                    ans[qid][tab] = query
 
     with open(jsonpath, "w") as jo:
-        json.dump(ans, jo)
+        json.dump(ans, jo, indent=4)
 
 
 def main(argv):
