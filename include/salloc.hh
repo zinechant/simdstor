@@ -33,10 +33,10 @@ inline int8_t* filedata(const char* filepath, bool sbNsp = true) {
   return data;
 }
 
-void filewrite(const char* filepath, unsigned bits, int8_t* data) {
+inline void filewrite(const char* filepath, unsigned bits, const int8_t* data) {
   int bytes = (bits + 7) >> 3;
   std::ofstream os(filepath, std::ofstream::binary);
-  os.write(reinterpret_cast<char*>(data), bytes);
+  os.write(reinterpret_cast<const char*>(data), bytes);
 }
 
 #endif  // SALLOC_HH_

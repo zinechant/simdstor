@@ -25,7 +25,7 @@
 #include <riscv_vector.h>
 enum { MAX_VL_BYTES = 32768 };
 
-char _arr[MAX_VL_BYTES];
+extern char _arr[MAX_VL_BYTES];
 
 inline void _print_vu8m1(const char *prefix, vuint8m1_t vx, unsigned vl) {
   uint8_t *arr = (uint8_t *)_arr;
@@ -130,8 +130,9 @@ inline void _print_vb8(const char *prefix, vbool8_t vm, unsigned vl) {
 
 #ifdef __ARM_FEATURE_SVE
 #include <arm_sve.h>
+
 #include "vsbytes.hh"
-int8_t __arr[32768];
+extern int8_t __arr[32768];
 
 inline void __print_svs8(const char *prefix, svint8_t v) {
   int8_t *arr = (int8_t *)__arr;
@@ -243,8 +244,8 @@ inline void __print_vsv(const char *prefix, svint32_t v) {
   }
   fprintf(stderr, "%s:\tn=%d\t", prefix, n);
 
-  const uint8_t* pdata = (const uint8_t*)data;
-  const uint8_t* pmeta = (const uint8_t*)meta + 2;
+  const uint8_t *pdata = (const uint8_t *)data;
+  const uint8_t *pmeta = (const uint8_t *)meta + 2;
   for (int i = 0; i < n; i++) {
     int64_t t = VSUnpackBytes(pdata, pmeta[i]);
     fprintf(stderr, "%9lx ", t);
@@ -299,10 +300,9 @@ inline void __print_vsv(const char *prefix, svint32_t v) {
   } while (0)
 
 #define dprintf_vsv(prefix, vx)                     \
-  do {                                                 \
+  do {                                              \
     if (VERBOSE_LEVEL > 1) __print_vsv(prefix, vx); \
   } while (0)
-
 
 #define iprintf_svs8(prefix, vx)                 \
   do {                                           \
@@ -349,8 +349,8 @@ inline void __print_vsv(const char *prefix, svint32_t v) {
     if (VERBOSE_LEVEL) __print_svbool(prefix, pg); \
   } while (0)
 
-#define iprintf_vsv(prefix, vx)                     \
-  do {                                                 \
+#define iprintf_vsv(prefix, vx)                 \
+  do {                                          \
     if (VERBOSE_LEVEL) __print_vsv(prefix, vx); \
   } while (0)
 

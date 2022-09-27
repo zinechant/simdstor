@@ -33,7 +33,7 @@ endif
 ifneq ($(ARM),)
 ifneq ($(ARM),0)
 	INCLUDE += -I ${HOME}/gem5/include
-	LDFLAGS += -L ${HOME}/gem5/util/m5/build/arm64/out
+	LDFLAGS += -fuse-ld=lld -L ${HOME}/gem5/util/m5/build/arm64/out
 	LDLIBS += -lm5
 endif
 endif

@@ -1,6 +1,7 @@
 *
 !.gitignore
-!*.cc
+*.cc
 !*.sql
 !Makefile
 !*.sh
+!q02_part.cc

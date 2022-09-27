@@ -24,13 +24,11 @@ BWC = {
 }
 
 OPS = {
-    "EqualTo": ("==", "svcmpeq_n_s%d", "svcmpeq_n_s%d", ("svvcmpeq", False)),
-    "LessThan": ("<", "svcmplt_n_s%d", "svcmplt_n_s%d", ("svvcmplt", False)),
-    "LessThanOrEqual":
-    ("<=", "svcmple_n_s%d", "svcmple_n_s%d", ("svvcmple", False)),
-    "GreaterThan": (">", "svcmpgt_n_s%d", "svcmpgt_n_s%d", ("svvcmplt", True)),
-    "GreaterThanOrEqual":
-    (">=", "svcmpge_n_s%d", "svcmpge_n_s%d", ("svvcmple", True)),
+    "EqualTo": ("==", "svcmpeq", "svcmpeq", ("svvcmpeq", False)),
+    "LessThan": ("<", "svcmplt", "svcmplt", ("svvcmplt", False)),
+    "LessThanOrEqual": ("<=", "svcmple", "svcmple", ("svvcmple", False)),
+    "GreaterThan": (">", "svcmpgt", "svcmpgt", ("svvcmplt", True)),
+    "GreaterThanOrEqual": (">=", "svcmpge", "svcmpge", ("svvcmple", True)),
 }
 
 
@@ -63,8 +61,8 @@ def fcode0(filter: list, indent: int, pred: str, andor: str) -> str:
 
 def fcode1(filter: list, indent: int, pred: str, door: bool):
     scol, op = map2op(filter[0], 1)
-    opstr = "%s(%s, v_%s, %s);" % (op, pred, filter[1], "v_" +
-                                   filter[2] if scol else str(filter[2]))
+    opstr = "%s(%s, v_%s, %s)" % (op, pred, filter[1],
+                                  "v_" + filter[2] if scol else str(filter[2]))
     if door:
         return "\n%s = svorr_z(svptrue_b8(), %s, %s);" % (" " * indent + pred,
                                                           pred, opstr)
@@ -72,21 +70,20 @@ def fcode1(filter: list, indent: int, pred: str, door: bool):
         return "\n%s = %s;" % (" " * indent + pred, opstr)
 
 
-def fcode3(filter: list, indent: int, pred: str, door: bool, vin: int):
+def fcode3(filter: list, indent: int, pred: str, door: bool, vin):
     scol, opb = map2op(filter[0], 3)
     op1 = "v_%s" % filter[1]
     op2 = "v_%s" % filter[2] if scol else str(filter[2])
     op, rev = opb
     ds = ""
     if not scol and (rev or filter[2] >= 16 or filter[2] < -16):
-        op2 = "vi%d" % vin
-        vin += 1
+        op2 = "vi%d" % next(vin)
         ds = "\n%ssvint32_t %s = svvdup(%d);" % (" " * indent, op2, filter[2])
     if rev:
         op3 = op1
         op1 = op2
         op2 = op3
-    opstr = "%s(%s, %s, %s);" % (op, pred, op1, op2)
+    opstr = "%s(%s, %s, %s)" % (op, pred, op1, op2)
     if door:
         return ds + "\n%s = svorr_z(svptrue_b8(), %s, %s);" % (
             " " * indent + pred, pred, opstr)
@@ -222,16 +219,17 @@ void %s(int kind) {
   } else {'''
     for col in acols:
         bw = BITS[schema[col][0]]
-        code += "\n%s_s = frstream(%s_i, %d, N * %d)" % (" " * 4 + col, col,
-                                                         bw, bw)
+        code += "\n%s_s = frstream((const int8_t*)%s_i, %d, N * %d);" % (
+            " " * 4 + "unsigned " + col, col, bw, bw)
     for col in ocols:
         bw = BITS[schema[col][0]]
-        code += "\n%s_t = fwstream(%s_o, %d)" % (" " * 4 + col, col, bw)
+        code += "\n%s_t = fwstream((int8_t*)%s_o, %d);" % (
+            " " * 4 + "unsigned " + col, col, bw)
     code += '\n%siprintf("' % (" " * 4)
     for col in acols:
-        code += '%s_s=%%x, ' % col
+        code += '%s_s=%%u, ' % col
     for col in ocols:
-        code += '%s_t=%%x, ' % col
+        code += '%s_t=%%u, ' % col
     code += '\\n"'
     for col in acols:
         code += ', %s_s' % col
@@ -280,7 +278,7 @@ void %s(int kind) {
 
     fc = ""
     orn = 0
-    vin = 0
+    vin = iter(range(100))
     fcols = set()
     tfilters = []
     for filter in filters:
@@ -303,11 +301,16 @@ void %s(int kind) {
             fc += "\n%spg = svand_b_z(pg, pg, %s);" % (" " * 8, pred)
         else:
             fc += fcode3(filter, 8, "pg", False, vin)
+    for col in acols:
+        if col not in fcols:
+            fcols.add(col)
+            fc += "\n%ssvint32_t v_%s = svvunpack(pg, %s_s);" % (" " * 8, col,
+                                                                 col)
     fc += "\n"
     for col in ocols:
         fc += "\n%sunsigned e_%s = svvpack(pg, v_%s, %s_t);" % (" " * 8, col,
                                                                 col, col)
-    fc += "\n%sn=svvrcnum();\n%se += e_%s;" % (" " * 8, " " * 8, ocols[0])
+    fc += "\n%sn = svvrcnum();\n%se += e_%s;" % (" " * 8, " " * 8, ocols[0])
     fc += "\n%sassert(e_%s <= (unsigned)n" % (" " * 8, ocols[0])
     for i in range(1, len(ocols)):
         fc += " && e_%s == e_%s" % (ocols[0], ocols[i])
@@ -358,7 +361,7 @@ void %s(int kind) {
     for col in ocols:
         code += '\n  %s_f[%s_f.length() - 5] += kind;' % (col, col)
     for col in ocols:
-        code += '\n  filewrite(%s_f.c_str(), e * %d, %s_o);' % (
+        code += '\n  filewrite(%s_f.c_str(), e * %d, (const int8_t*)%s_o);' % (
             col, BITS[schema[col][0]], col)
     code += "\n}\n"
 
