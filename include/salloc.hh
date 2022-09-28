@@ -20,7 +20,7 @@ inline int8_t* sballoc(unsigned size) {
   static int8_t* sbaddr = (int8_t*)(1025UL << 30);
   int8_t* ans = sbaddr;
   sbaddr += size;
-  assert(((unsigned long)sbaddr) < (1026UL << 30));
+  assert(((unsigned long)sbaddr) < (1028UL << 30));
   return ans;
 }
 

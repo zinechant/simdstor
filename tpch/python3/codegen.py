@@ -16,6 +16,14 @@ BITS = {
     "int8": 8,
 }
 
+SBIT = {
+    "decimal": 64,
+    "date": 31,
+    "int32": 32,
+    "int16": 16,
+    "int8": 8,
+}
+
 BWC = {
     64: "d",
     32: "w",
@@ -135,7 +143,7 @@ void %s(int kind) {
             ty, col, ty, qname.split('_')[-1], col)
     for col in ocols:
         ty = "int%d_t*" % BITS[schema[col][0]]
-        code += '  %s %s_o = (%s)sballoc(N << %d);\n' % (
+        code += '  %s %s_o = (%s)sballoc(N * %d);\n' % (
             ty, col, ty, BITS[schema[col][0]] >> 3)
 
     code += '  iprintf("'
@@ -202,7 +210,7 @@ void %s(int kind) {
     fc += "\n%se += d;\n%sassert(d <= (unsigned)n);" % (" " * 6, " " * 6)
     for col in ocols:
         bw = BITS[schema[col][0]]
-        fc += ("\n%ssvst1%s_s%d(svwhilelt_b%d_u32(0, d), %s_p,"
+        fc += ("\n%ssvst1%s_s%d(svwhilelt_b%d_u32(0, d), %s_p, "
                "svcompact(pg, v_%s));") % (" " * 6, "" if bw == BW else
                                            BWC[bw], BW, BW, col, col)
     fc += "\n"
@@ -227,9 +235,9 @@ void %s(int kind) {
             " " * 4 + "unsigned " + col, col, bw)
     code += '\n%siprintf("' % (" " * 4)
     for col in acols:
-        code += '%s_s=%%u, ' % col
+        code += '%s_s=%%x, ' % col
     for col in ocols:
-        code += '%s_t=%%u, ' % col
+        code += '%s_t=%%x, ' % col
     code += '\\n"'
     for col in acols:
         code += ', %s_s' % col
@@ -264,6 +272,7 @@ void %s(int kind) {
         bw = BITS[schema[col][0]]
         fc += "\n%sunsigned e_%s = svpack_s%d(pg, v_%s, %s_t);" % (
             " " * 8, col, BW, col, col)
+    fc += "\n%se += e_%s;" % (" " * 8, ocols[0])
     fc += "\n%sassert(e_%s <= (unsigned)n" % (" " * 8, ocols[0])
     for i in range(1, len(ocols)):
         fc += " && e_%s == e_%s" % (ocols[0], ocols[i])
@@ -284,7 +293,7 @@ void %s(int kind) {
     for filter in filters:
         bw = 8
         for col in f2cols(filter):
-            bw = max(bw, BITS[schema[col][0]])
+            bw = max(bw, SBIT[schema[col][0]])
         tfilters.append((bw, filter))
     for _, filter in sorted(tfilters):
         for col in f2cols(filter):
@@ -343,12 +352,12 @@ void %s(int kind) {
         code += ', b_%s' % col
     for col in ocols:
         code += ', c_%s' % col
-    code += ');\n'
+    code += ');'
 
-    fc += "\n%sassert(true" % (" " * 4)
+    code += "\n%sassert(true" % (" " * 4)
     for col in ocols:
-        fc += " && c_%s == e * %d" % (col, BITS[schema[col][0]])
-    fc += ");\n"
+        code += " && c_%s == e * %d" % (col, BITS[schema[col][0]])
+    code += ");"
 
     code += '''
   }

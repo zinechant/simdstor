@@ -72,7 +72,6 @@ void q02_part(int kind) {
 
     iprintf("s0=%x, s1=%x, s2=%x, s3=%x, s4=%x\n", p_size_si, p_partkey_si,
             p_mfgr_si, p_partkey_so, p_mfgr_so);
-    fflush(nullptr);
 
     if (kind == 2) {
       for (int i = 0, n = svcntw(); i < N; i += n) {
