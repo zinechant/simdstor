@@ -25,7 +25,7 @@
 #include <riscv_vector.h>
 enum { MAX_VL_BYTES = 32768 };
 
-extern char _arr[MAX_VL_BYTES];
+static char _arr[MAX_VL_BYTES];
 
 inline void _print_vu8m1(const char *prefix, vuint8m1_t vx, unsigned vl) {
   uint8_t *arr = (uint8_t *)_arr;
@@ -132,7 +132,7 @@ inline void _print_vb8(const char *prefix, vbool8_t vm, unsigned vl) {
 #include <arm_sve.h>
 
 #include "vsbytes.hh"
-extern int8_t __arr[32768];
+static int8_t __arr[32768];
 
 inline void __print_svs8(const char *prefix, svint8_t v) {
   int8_t *arr = (int8_t *)__arr;

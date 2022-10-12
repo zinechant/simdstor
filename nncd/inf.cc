@@ -5,6 +5,7 @@
 
 #include <cassert>
 
+#include "debug.h"
 #include "salloc.hh"
 
 const int M = 28;
@@ -61,7 +62,9 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         int so = fwstream((int8_t*)conv, 32);
         for (int k = 0, n = 0; k < C; k += n) {
           svint32_t v = svvunpack(svptrue_b8(), si);
-          n = svvpack(svptrue_b8(), v, so);
+          int nn = svvpack(svptrue_b8(), v, so);
+          n = svvrcnum();
+          assert(n == nn);
           crstream(si, n);
         }
         uint64_t bl = erstream(si);
@@ -71,6 +74,18 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
       }
     }
   }
+
+  dprintf("%s", "\n");
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++) {
+      dprintf("i=%d,j=%d: ", i, j);
+      int32_t* conv = pconv + (i * N + j) * C;
+      for (int k = 0; k < C; k++) {
+        dprintf("\t%d", conv[k]);
+      }
+      dprintf("%s", "\n");
+    }
+  dprintf("%s", "\n");
 
   for (int i = 0; i < M; i++)
     for (int j = 0; j < M; j++) {
@@ -125,23 +140,44 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
               svint32_t vc = svvunpack(svptrue_b8(), sc);
               vf = svvmul_m(svptrue_b8(), vf, svvdup(x));
               vc = svvadd_m(svptrue_b8(), vc, vf);
-              n = svvpack(svptrue_b8(), vc, so);
-              crstream(sf, n);
-              crstream(sc, n);
+              int nn = svvnum(svptrue_b8(), vc);
+              crstream(sf, nn);
+              crstream(sc, nn);
+              int nnn = svvpack(svptrue_b8(), vc, so);
+              n = svvrcnum();
+              assert(n == nn && n == nnn);
             }
+            uint64_t bf = erstream(sf);
+            assert(!bf);
+            uint64_t bc = erstream(sc);
+            assert(!bc);
+            uint64_t bw = ewstream(so);
+            assert(bw == C << 5);
           }
         }
       }
     }
+
+  dprintf("%s", "\n");
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++) {
+      dprintf("i=%d,j=%d: ", i, j);
+      int32_t* conv = pconv + (i * N + j) * C;
+      for (int k = 0; k < C; k++) {
+        dprintf("\t%d", conv[k]);
+      }
+      dprintf("%s", "\n");
+    }
+  dprintf("%s", "\n");
 
   for (int p = 0; p < P; p++)
     for (int q = 0; q < P; q++) {
       int i = p + p;
       int j = q + q;
       const int32_t* conv0 = pconv + i * N * C + j * C;
-      const int32_t* conv1 = conv0 + j * C;
-      const int32_t* conv2 = conv0 + i * N * C;
-      const int32_t* conv3 = conv2 + j * C;
+      const int32_t* conv1 = conv0 + C;
+      const int32_t* conv2 = conv0 + N * C;
+      const int32_t* conv3 = conv2 + C;
       int32_t* pool = ppool + p * P * C + q * C;
 
       if (kind == 0) {
@@ -157,10 +193,10 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         for (int k = 0; k < C; k += svcntw()) {
           svbool_t pg = svwhilelt_b32_s32(k, C);
           svint32_t v = svdup_s32(0);
-          v = svvmax_m(pg, v, svld1_s32(pg, conv0));
-          v = svvmax_m(pg, v, svld1_s32(pg, conv1));
-          v = svvmax_m(pg, v, svld1_s32(pg, conv2));
-          v = svvmax_m(pg, v, svld1_s32(pg, conv3));
+          v = svmax_m(pg, v, svld1_s32(pg, conv0));
+          v = svmax_m(pg, v, svld1_s32(pg, conv1));
+          v = svmax_m(pg, v, svld1_s32(pg, conv2));
+          v = svmax_m(pg, v, svld1_s32(pg, conv3));
           v = svasr_m(pg, v, idiff);
           svst1_s32(pg, pool, v);
           conv0 += svcntw();
@@ -177,13 +213,23 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         int sp = fwstream((int8_t*)pool, 32);
         for (int k = 0; k < C; k += svcntw()) {
           svint32_t v = svdup_s32(0);
-          v = svvmax_m(svptrue_b32(), v, svunpack_s32(s0));
-          v = svvmax_m(svptrue_b32(), v, svunpack_s32(s1));
-          v = svvmax_m(svptrue_b32(), v, svunpack_s32(s2));
-          v = svvmax_m(svptrue_b32(), v, svunpack_s32(s3));
+          v = svmax_m(svptrue_b32(), v, svunpack_s32(s0));
+          v = svmax_m(svptrue_b32(), v, svunpack_s32(s1));
+          v = svmax_m(svptrue_b32(), v, svunpack_s32(s2));
+          v = svmax_m(svptrue_b32(), v, svunpack_s32(s3));
           v = svasr_m(svptrue_b32(), v, idiff);
           svpack_s32(svptrue_b32(), v, sp);
         }
+        uint64_t b0 = erstream(s0);
+        assert(!b0);
+        uint64_t b1 = erstream(s1);
+        assert(!b1);
+        uint64_t b2 = erstream(s2);
+        assert(!b2);
+        uint64_t b3 = erstream(s3);
+        assert(!b3);
+        uint64_t bw = ewstream(sp);
+        assert(bw == C << 5);
       } else {
         assert(kind == 3);
         int s0 = frstream((const int8_t*)conv0, 32, C << 5);
@@ -192,20 +238,44 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         int s3 = frstream((const int8_t*)conv3, 32, C << 5);
         int sp = fwstream((int8_t*)pool, 32);
         for (int k = 0, n = 0; k < C; k += n) {
-          svint32_t v = svdup_s32(0);
+          svint32_t v = svvdup(0);
           v = svvmax_m(svptrue_b8(), v, svvunpack(svptrue_b8(), s0));
           v = svvmax_m(svptrue_b8(), v, svvunpack(svptrue_b8(), s1));
           v = svvmax_m(svptrue_b8(), v, svvunpack(svptrue_b8(), s2));
           v = svvmax_m(svptrue_b8(), v, svvunpack(svptrue_b8(), s3));
           v = svvasr_m(svptrue_b8(), v, svvdup(idiff));
-          n = svvpack(svptrue_b8(), v, sp);
+          int nn = svvpack(svptrue_b8(), v, sp);
+          n = svvrcnum();
+          assert(n == nn);
           crstream(s0, n);
           crstream(s1, n);
           crstream(s2, n);
           crstream(s3, n);
         }
+        uint64_t b0 = erstream(s0);
+        assert(!b0);
+        uint64_t b1 = erstream(s1);
+        assert(!b1);
+        uint64_t b2 = erstream(s2);
+        assert(!b2);
+        uint64_t b3 = erstream(s3);
+        assert(!b3);
+        uint64_t bw = ewstream(sp);
+        assert(bw == C << 5);
       }
     }
+
+  dprintf("%s", "\n");
+  for (int i = 0; i < P; i++)
+    for (int j = 0; j < P; j++) {
+      dprintf("i=%d,j=%d: ", i, j);
+      int32_t* pool = ppool + i * P * C + j * C;
+      for (int k = 0; k < C; k++) {
+        dprintf("\t%d", pool[k]);
+      }
+      dprintf("%s", "\n");
+    }
+  dprintf("%s", "\n");
 
   int ans = 0;
   for (int i = 0; i < A; i++) {
@@ -214,7 +284,7 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
     const int32_t* weight = dw + i * D;
     if (kind == 0) {
       for (int j = 0; j < D; j++) {
-        pprob[i] += (ppool[j] >> idiff) * weight[j];
+        pprob[i] += ppool[j] * weight[j];
       }
     } else if (kind == 1) {
       for (int j = 0; j < D; j += svcntw()) {
@@ -227,18 +297,22 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         weight += svcntw();
       }
     } else if (kind == 2) {
-      int sp = frstream((const int8_t*)ppool, 32, C << 5);
-      int sw = frstream((const int8_t*)weight, 32, C << 5);
+      int sp = frstream((const int8_t*)ppool, 32, D << 5);
+      int sw = frstream((const int8_t*)weight, 32, D << 5);
       for (int j = 0; j < D; j += svcntw()) {
         svint32_t v = svunpack_s32(sp);
         svint32_t w = svunpack_s32(sw);
         v = svmul_m(svptrue_b32(), v, w);
         pprob[i] += svaddv(svptrue_b32(), v);
       }
+      uint64_t bp = erstream(sp);
+      assert(!bp);
+      uint64_t bw = erstream(sw);
+      assert(!bw);
     } else {
       assert(kind == 3);
-      int sp = frstream((const int8_t*)ppool, 32, C << 5);
-      int sw = frstream((const int8_t*)weight, 32, C << 5);
+      int sp = frstream((const int8_t*)ppool, 32, D << 5);
+      int sw = frstream((const int8_t*)weight, 32, D << 5);
       for (int j = 0, n = 0; j < D; j += n) {
         svint32_t v = svvunpack(svptrue_b8(), sp);
         svint32_t w = svvunpack(svptrue_b8(), sw);
@@ -248,6 +322,10 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         crstream(sp, n);
         crstream(sw, n);
       }
+      uint64_t bp = erstream(sp);
+      assert(!bp);
+      uint64_t bw = erstream(sw);
+      assert(!bw);
     }
 
     if (pprob[i] > pprob[ans]) ans = i;

@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   const int32_t* cb = (const int32_t*)filedata("./data/cb.data");
   const int32_t* dw = (const int32_t*)filedata("./data/dw.data");
   const int32_t* db = (const int32_t*)filedata("./data/db.data");
-  const int ishift = 10;
+  const int ishift = 2;
   const int idiff = 10;
 
   int ans = inf(kind, image, cw, cb, dw, db, ishift, idiff);
