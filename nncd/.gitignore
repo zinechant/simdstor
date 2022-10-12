@@ -1,0 +1,6 @@
+*
+!gem5.sh
+!.gitignore
+!*.cc
+!*.hh
+!Makefile

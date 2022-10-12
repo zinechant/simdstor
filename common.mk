@@ -32,9 +32,12 @@ endif
 
 ifneq ($(ARM),)
 ifneq ($(ARM),0)
+M5LIBD=${HOME}/gem5/util/m5/build/arm64/out
+ifneq ($(wildcard ${M5LIBD}/.*),)
 	INCLUDE += -I ${HOME}/gem5/include
-	LDFLAGS += -fuse-ld=lld -L ${HOME}/gem5/util/m5/build/arm64/out
+	LDFLAGS += -fuse-ld=lld -L ${M5LIBD}
 	LDLIBS += -lm5
+endif
 endif
 endif
 
