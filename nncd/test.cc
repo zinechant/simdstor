@@ -28,6 +28,6 @@ int main(int argc, char* argv[]) {
   const int idiff = 10;
 
   int ans = inf(kind, image, cw, cb, dw, db, ishift, idiff);
-  iprintf("ans = %d, label = %d\n", ans, labels[iid]);
+  printf("ans = %d, label = %d\n", ans, labels[iid]);
   return 0;
 }

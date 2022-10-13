@@ -79,7 +79,7 @@ class VarSIMDTest : public ::testing::Test {
 
     uint8_t pos = 0;
     for (uint32_t i = 0; i < elems; i++) {
-      uint64_t x = RAND64() & MASK(width);
+      uint64_t x = RAND64() & MASK(width - 1 + (URAND32() & 1));
       PackBits(pdata, pos, width, x);
       AdvanceBits(pdata, pos, width);
     }
@@ -1202,7 +1202,7 @@ TEST_F(VarSIMDTest, fixstream_fixvec) {
   EXPECT_EQ(bits, bitsright);
 
   for (uint32_t i = 0; i < bytes; i++) {
-    EXPECT_EQ(encoded[i], dump[i]);
+    EXPECT_EQ(encoded[i], dump[i]) << i;
   }
 }
 
@@ -1330,7 +1330,7 @@ TEST_F(VarSIMDTest, fixstream_varvec) {
   EXPECT_EQ(bits, bitsright);
 
   for (uint32_t i = 0; i < bytes; i++) {
-    EXPECT_EQ(encoded[i], dump[i]);
+    EXPECT_EQ(encoded[i], dump[i]) << i;
   }
 }
 

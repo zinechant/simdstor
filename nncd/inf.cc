@@ -317,7 +317,7 @@ int inf(int kind, const uint8_t* image, const int32_t* cw, const int32_t* cb,
         svint32_t v = svvunpack(svptrue_b8(), sp);
         svint32_t w = svvunpack(svptrue_b8(), sw);
         v = svvmul_m(svptrue_b8(), v, w);
-        pprob[i] += svaddv(svptrue_b8(), v);
+        pprob[i] += svvaddv(svptrue_b8(), v);
         n = svvrcnum();
         crstream(sp, n);
         crstream(sw, n);
