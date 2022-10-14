@@ -17,13 +17,19 @@ int main(int argc, char* argv[]) {
   }
 
   int kind = argv[2][0] - '0';
+  bool prune = kind > 3;
+  kind = kind & 3;
   const uint8_t* image = (const uint8_t*)filedata("./data/images.data");
   const int8_t* labels = filedata("./data/labels.data");
   image += iid * 28 * 28;
-  const int32_t* cw = (const int32_t*)filedata("./data/cw.data");
-  const int32_t* cb = (const int32_t*)filedata("./data/cb.data");
-  const int32_t* dw = (const int32_t*)filedata("./data/dw.data");
-  const int32_t* db = (const int32_t*)filedata("./data/db.data");
+  const int32_t* cw = prune ? (const int32_t*)filedata("./data/prune/cw.data")
+                            : (const int32_t*)filedata("./data/quant/cw.data");
+  const int32_t* cb = prune ? (const int32_t*)filedata("./data/prune/cb.data")
+                            : (const int32_t*)filedata("./data/quant/cb.data");
+  const int32_t* dw = prune ? (const int32_t*)filedata("./data/prune/dw.data")
+                            : (const int32_t*)filedata("./data/quant/dw.data");
+  const int32_t* db = prune ? (const int32_t*)filedata("./data/prune/db.data")
+                            : (const int32_t*)filedata("./data/quant/db.data");
   const int ishift = 2;
   const int idiff = 10;
 
