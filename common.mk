@@ -57,6 +57,10 @@ CXXFLAGS += -std=c++17
 CFLAGS += -std=c11
 LDFLAGS += $(ARCH) -static
 
+ifeq ($(CXX),clang++)
+	CPPFLAGS += -fno-vectorize -fno-slp-vectorize
+endif
+
 all : OPT ?= -O2
 all : $(TARGET)
 
