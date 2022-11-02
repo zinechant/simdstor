@@ -38,7 +38,7 @@ set verilogout_equation false
 set target_library { saed14hvt_pg_tt0p8v25c.db saed14hvt_tt0p8v25c.db saed14lvt_pg_tt0p8v25c.db saed14lvt_tt0p8v25c.db saed14rvt_pg_tt0p8v25c.db saed14rvt_tt0p8v25c.db saed14sram_tt0p8v25c.db }
 set link_library { saed14hvt_pg_tt0p8v25c.db saed14hvt_tt0p8v25c.db saed14lvt_pg_tt0p8v25c.db saed14lvt_tt0p8v25c.db saed14rvt_pg_tt0p8v25c.db saed14rvt_tt0p8v25c.db saed14sram_tt0p8v25c.db }
 #  set symbol_library { }
-set search_path { . /usr/synopsys/saed14/stdcell_hvt/db_ccs /usr/synopsys/saed14/stdcell_rvt/db_ccs /usr/synopsys/saed14/stdcell_lvt/db_ccs /usr/synopsys/syn/T-2022.03-SP2/libraries/syn /usr/synopsys/saed14/SAED14nm_EDK_SRAM_v_05072020/lib/sram/logic_synth/single }
+set search_path { . /usr/synopsys/saed14/stdcell_hvt/db_ccs /usr/synopsys/saed14/stdcell_rvt/db_ccs /usr/synopsys/saed14/stdcell_lvt/db_ccs /usr/synopsys/saed14/SAED14nm_EDK_SRAM_v_05072020/lib/sram/logic_synth/single }
 
 # Define design library, synthesis by default
 define_design_lib synthesis -path synthesis

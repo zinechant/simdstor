@@ -1,0 +1,4 @@
+*
+!.synopsys_dc.setup
+!.gitignore
+!run_dc.tcl

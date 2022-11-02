@@ -20,7 +20,7 @@ SOC_PATH      = $(WORK_PATH)/soc
 VCS           = vcs +v2k -full64 -Mupdate -debug_all
 VCS_POST_SYN  = $(VCS) +neg_tchk +sdfverbose -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_hvt.v -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_rvt.v -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_lvt.v
 VCS_POST_PR   = $(VCS) +neg_tchk +sdfverbose -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_hvt.v -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_rvt.v -v $(LIB_PATH)/stdcell_hvt/verilog/saed14nm_lvt.v
-DC_SHELL      = dc_shell-xg-t -f
+DC_SHELL      = dc_shell-xg-t -64bit -f
 MAKE          = make --silent
 RM            = rm -rfv
 
@@ -58,9 +58,7 @@ clean:
 
 #---- behavioral verilog simulation ----#
 pre_sim: init
-	@cd $(PRE_SIM_PATH) &&\
-	$(VCS) tb_$(TOP_MODULE).sv &&\
-	./simv -gui &
+	${MAKE} -C pre_sim all
 
 #---- behavioral simulation after synthesis ----#
 syn_sim: init
@@ -71,7 +69,7 @@ syn_sim: init
 #---- synopsys logic synthesis ----#
 synthesis: init
 	@cd $(SYN_PATH) &&\
-	$(DC_SHELL) run_dc.tcl | tee -i dc.log
+	$(DC_SHELL) run_dc.tcl -o dc.log
 
 #---- post simulation after encounter process ----#
 post_sim: init

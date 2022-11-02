@@ -4,11 +4,11 @@ debug: dbg verdi
 opt:
 	vcs -full64 -sverilog -timescale=1ns/1ps \
 		+incdir+../../src ../../src/streambuffer.sv \
-		+incdir+../../test ../../test/ ../../test/tb_streambuffer.sv
+		+incdir+../../test ../../test/tb_streambuffer.sv
 dbg:
 	vcs -full64 -sverilog -timescale=1ns/1ps -debug_acc+all -kdb\
 		+incdir+../../src ../../src/streambuffer.sv \
-		+incdir+../../test ../../test/ ../../test/tb_streambuffer.sv
+		+incdir+../../test ../../test/tb_streambuffer.sv
 
 
 verdi:

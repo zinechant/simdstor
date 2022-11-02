@@ -9,9 +9,9 @@
 
 #---- global variables ----#
 WORK_PATH    := $(shell pwd)
-TOP_MODULE   := scratchpad
+TOP_MODULE   := trimux
 LIB_PATH      = /usr/synopsys/saed14
-VLG_PATH      = $(WORK_PATH)/../src
+VLG_PATH      = $(WORK_PATH)/../../src
 PRE_SIM_PATH  = $(WORK_PATH)/pre_sim
 SYN_SIM_PATH  = $(WORK_PATH)/syn_sim
 POST_SIM_PATH = $(WORK_PATH)/post_sim
