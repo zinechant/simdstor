@@ -13,10 +13,10 @@ sim: ${srcs}
 
 .PHONY: debug
 debug: ${srcs}
-	vcs -full64 -sverilog +vpi -debug_acc+all -timescale=1ns/1ps \
+	vcs -full64 -sverilog +vpi -kdb -debug_acc+all -timescale=1ns/1ps \
 		${dirs} ${srcs} \
 		-top ${TOP}
-	./simv -gui -dve_opt "-script signal_${TOP}.tcl"
+	./simv -gui=verdi -verdi_opts "-sx"
 
 .PHONY: clean
 clean:

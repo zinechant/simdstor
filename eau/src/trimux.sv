@@ -20,7 +20,7 @@ module trimux (
             assign prev[k] = (k == 0) ? '0 : psum[k - 1];
         end
         for (i = 0; i < BS; i++) begin
-            for (j = 0; j < BS; i++) begin
+            for (j = 0; j < BS; j++) begin
                 assign index[i] = (j >= inum || prev[j] > i || psum[j] <= i) ?
                     'z : ((i - prev[j] < ilen[j]) ? ipos[j] + i - prev[j] : '1);
             end
