@@ -9,7 +9,7 @@ module trimux (
     input wire [BSW : 0] inum;
     input wire [WW - 1 : 0] ilen[BS];
     input wire [BSW - 1 : 0] ipos[BS];
-    input wire [BSW - 1 : 0] psum[BS];
+    input wire [BSW : 0] psum[BS];
     output tri [BSW : 0] index[BS];
 
     logic [BSW - 1 : 0] prev[BS];

@@ -11,7 +11,7 @@ localparam WW = 8 - BSW + 1;
 logic [BSW : 0] inum;
 logic [WW - 1 : 0] ilen[BS];
 logic [BSW - 1 : 0] ipos[BS];
-logic [BSW - 1 : 0] psum[BS];
+logic [BSW : 0] psum[BS];
 logic [BSW : 0] index[BS];
 
 trimux #(.VLEN(VLEN), .BSW(BSW)) inst_trimux (
