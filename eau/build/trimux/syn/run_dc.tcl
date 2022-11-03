@@ -19,16 +19,28 @@
 # temperature: 25.00
 # voltage: 1.20
 
+file delete -force synthesis
+
 # Set top module / design name
 set DesignName trimux
+set SRCS ../../../src/${DesignName}.sv
+
+set timenow [clock seconds]
+set outdir [clock format $timenow -format "${DesignName}_%y-%m-%d_%H:%M:%S"]
+file mkdir $outdir
+
+file copy run_dc.tcl $outdir
+file copy $SRCS $outdir
+
+set_host_options -max_cores 16
 
 #---- Start to analyze, elaborate and uniquify ----#
-analyze -format sverilog -library synthesis $DesignName.sv
+analyze -format sverilog -library synthesis $SRCS
 elaborate $DesignName -library synthesis
 uniquify
 
 #---- All constraints are listed below ----#
-set clk_period 0.5
+set clk_period 4.0
 # Create a real clock if clock port is found
 if {[sizeof_collection [get_ports clk]] > 0} {
   set clk_name clk
@@ -44,19 +56,19 @@ if {[sizeof_collection [get_ports clk]] == 0} {
 # Set clock latency, transition and uncertainty
 set_clock_latency 0.0 $clk_name
 set_clock_transition 0.01 $clk_name
-set_clock_uncertainty -setup 0.1 $clk_name
-set_clock_uncertainty -hold 0.1 $clk_name
+set_clock_uncertainty -setup 0.01 $clk_name
+set_clock_uncertainty -hold 0.01 $clk_name
 # Prevent Design compiler from adding buffers to the clock network
 # set_dont_touch_network $clk_name
 # Hold time violations of clock are fixed in encounter
 # set_fix_hold $clk_name
 
 #---- Input transition and delay, and output delay and fanout ----#
-# set_input_transition 0.1 \
+# set_input_transition 0.05 \
 #   [remove_from_collection [all_inputs] [get_ports clk]]
-set_input_delay 0 -max -clock $clk_name \
-  [remove_from_collection [all_inputs] [get_ports clk]]
-set_output_delay 0 -max -clock $clk_name [all_output]
+set_input_delay 0.01 -max -clock $clk_name \
+  [remove_from_collection [all_inputs] [get_ports $clk_name]]
+set_output_delay 0.01 -max -clock $clk_name [all_output]
 set_fanout_load 2.0 [all_outputs]
 
 #---- Output load and assumed input load ----#
@@ -67,9 +79,10 @@ set_load -pin_load 0.1 [all_outputs]
 
 #---- Maximum delay, capacitance, transition, fanout and area constraint ----#
 # set_max_delay [expr $clk_period * 0.9] -from [get_ports rst] -to [all_outputs]
-set_max_capacitance 1.0 $DesignName
+set_max_capacitance 8.0 $DesignName
+set_min_capacitance 0.01 $DesignName
 set_max_transition 0.1 $DesignName
-set_max_fanout 20.0 $DesignName
+set_max_fanout 40.0 $DesignName
 # set_max_area 0.0
 
 # Remove assign statements in verilog netlist
@@ -84,11 +97,11 @@ group_path -name IN2OUT -from [remove_from_collection [all_inputs] [get_ports cl
   -to [all_outputs]
 
 #---- Make necessary directories for reports ----#
-file mkdir reports
+file mkdir $outdir/reports
 
 #---- Check design and dump report ----#
 check_design -summary -nosplit
-check_design -nosplit > reports/check_design.rpt
+check_design -nosplit > $outdir/reports/check_design.rpt
 
 #---- Design compilation and optimization ----#
 #compile_ultra -no_autoungroup -exact_map -no_boundary_optimization -top
@@ -100,16 +113,23 @@ change_names -rules verilog -hierarchy -verbose
 
 #---- Saving .v .sdc .sdf files ----#
 # Synopsys internal database format .ddc file is skipped
-#write -format ddc -hierarchy -output $DesignName.ddc
-write -format verilog -hierarchy -output ${DesignName}_syn.v
-write_sdc -nosplit $DesignName.sdc
-write_sdf $DesignName.sdf
+#write -format ddc -hierarchy -output $outdir/$DesignName.ddc
+write -format verilog -hierarchy -output $outdir/${DesignName}_syn.v
+write_sdc -nosplit $outdir/$DesignName.sdc
+write_sdf $outdir/$DesignName.sdf
 
 #---- Report compilation results ----#
 report_constraint -all_violators
 report_timing -max_paths 2 -transition_time -nets -attributes -capacitance -nosplit
-report_constraint -nosplit > reports/constraint.rpt
-report_timing -max_paths 4 -transition_time -nets -attributes -capacitance -nosplit > reports/timing.rpt
-report_qor > reports/qor.rpt
-report_area -nosplit -physical -hierarchy > reports/area.rpt
-report_power -nosplit -verbose > reports/power.rpt
+report_constraint -nosplit > $outdir/reports/constraint.rpt
+report_timing -max_paths 4 -transition_time -nets -attributes -capacitance -nosplit > $outdir/reports/timing.rpt
+report_qor > $outdir/reports/qor.rpt
+report_area -nosplit -physical -hierarchy > $outdir/reports/area.rpt
+report_power -nosplit -verbose > $outdir/reports/power.rpt
+
+file delete -force current_output
+file link -symbolic current_output $outdir
+
+file copy dc.log $outdir
+
+exit
