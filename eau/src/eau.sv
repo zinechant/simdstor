@@ -21,8 +21,8 @@ module eau(
     logic [BLEN - 1 : 0] odata1_r[BS], odata2_r[BS];
 
     pps #(.NW(BSW), .IW(WW), .OW(BSW + 1)) pps_inst (ilen, psum);
-    trimux #(.VLEN(VLEN), .BSW(BSW)) tmux1 (inum, ilen1, ipos1, psum, idx1);
-    trimux #(.VLEN(VLEN), .BSW(BSW)) tmux2 (inum, ilen2, ipos2, psum, idx2);
+    pidx #(.VLEN(VLEN), .BSW(BSW)) pidx1 (inum, ilen1, ipos1, psum, idx1);
+    pidx #(.VLEN(VLEN), .BSW(BSW)) pidx2 (inum, ilen2, ipos2, psum, idx2);
 
     assign inum = inum1 < inum2 ? inum1 : inum2;
     assign onum = onum_r;
@@ -30,7 +30,7 @@ module eau(
         onum_r <= inum;
     end
 
-    genvar i, j, k;
+    genvar i, k;
     generate
         for (k = 0; k < BS; k++) begin
             assign ilen[k] = ilen1[k] < ilen2[k] ? ilen2[k] : ilen1[k];

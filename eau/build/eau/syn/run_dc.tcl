@@ -23,7 +23,7 @@ file delete -force synthesis
 
 # Set top module / design name
 set DesignName eau
-set SRCS {../../../src/trimux.sv ../../../src/pps.sv ../../../src/eau.sv}
+set SRCS {../../../src/pidx.sv ../../../src/pps.sv ../../../src/eau.sv}
 
 set timenow [clock seconds]
 set outdir [clock format $timenow -format "${DesignName}_%y-%m-%d_%H:%M:%S"]
@@ -40,7 +40,7 @@ elaborate $DesignName -library synthesis
 uniquify
 
 #---- All constraints are listed below ----#
-set clk_period 4.0
+set clk_period 1.0
 # Create a real clock if clock port is found
 if {[sizeof_collection [get_ports clk]] > 0} {
   set clk_name clk
@@ -66,13 +66,13 @@ set_clock_uncertainty -hold 0.01 $clk_name
 #---- Input transition and delay, and output delay and fanout ----#
 # set_input_transition 0.05 \
 #   [remove_from_collection [all_inputs] [get_ports clk]]
-set_input_delay 0.01 -max -clock $clk_name \
+set_input_delay 0.04 -max -clock $clk_name \
   [remove_from_collection [all_inputs] [get_ports $clk_name]]
-set_output_delay 0.01 -max -clock $clk_name [all_output]
+set_output_delay 0.04 -max -clock $clk_name [all_output]
 set_fanout_load 2.0 [all_outputs]
 
 #---- Output load and assumed input load ----#
-set_load -pin_load 0.1 [all_outputs]
+set_load -pin_load 0.2 [all_outputs]
 # Get the cell from symbol library for driving the input of the digital circuits
 # set_driving_cell -lib_cell INVM1W -no_design_rule \
 #   [remove_from_collection [all_inputs] [get_ports clk]]
