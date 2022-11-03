@@ -37,8 +37,8 @@ module eau(
         end
         for (i = 0; i < BS; i++) begin
             always_ff @(posedge clk) begin
-                odata1_r[i] <= (idx1[BSW] == 0) ? idata1[idx1[i]] : '0;
-                odata2_r[i] <= (idx2[BSW] == 0) ? idata2[idx2[i]] : '0;
+                odata1_r[i] <= (idx1[i][BSW] == 0) ? idata1[idx1[i][BSW - 1 : 0]] : '0;
+                odata2_r[i] <= (idx2[i][BSW] == 0) ? idata2[idx2[i][BSW - 1 : 0]] : '0;
             end
             assign odata1[i] = odata1_r[i];
             assign odata2[i] = odata2_r[i];

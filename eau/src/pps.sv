@@ -17,7 +17,7 @@ module pps (
             assign tree[0][k] = data[k];
             assign psum[k] = tree[NW][k];
         end
-        for (j = 1; j < NW; j++) begin
+        for (j = 0; j < NW; j++) begin
             for (i = 0; i < N; i++) begin
                 assign tree[j + 1][i] = (i < (1 << j)) ? tree[j][i] :
                     tree[j][i] + tree[j][i - (1 << j)];
