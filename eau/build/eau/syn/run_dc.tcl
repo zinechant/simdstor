@@ -81,7 +81,7 @@ set_load -pin_load 0.2 [all_outputs]
 # set_max_delay [expr $clk_period * 0.9] -from [get_ports rst] -to [all_outputs]
 set_max_capacitance 8.0 $DesignName
 set_min_capacitance 0.01 $DesignName
-set_max_transition 0.1 $DesignName
+set_max_transition 0.5 $DesignName
 set_max_fanout 40.0 $DesignName
 # set_max_area 0.0
 
