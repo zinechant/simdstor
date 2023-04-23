@@ -124,6 +124,7 @@ class VarSIMDTest : public ::testing::Test {
     char dicp[100];
     sprintf(dicp, kDictFmt, d);
     int abytes = filesize(dicp);
+    assert(abytes && "Need to run ../huff first which generates huff dicts.");
     assert(abytes <= kMaxDSize);
 
     FILE* di = fopen(dicp, "rb");
@@ -1304,6 +1305,7 @@ TEST_F(VarSIMDTest, fixstream_varvec) {
   uint32_t elems = bits / width;
   bits = elems * width;
   uint32_t bytes = (bits + 7) >> 3;
+  svvrcnum();
 
   INFO("fixstream bits = %u, elems = %u\n", bits, elems);
 
@@ -1339,6 +1341,7 @@ TEST_F(VarSIMDTest, huffstream_varvec) {
   auto [encoded, enc, dec] = randHuff(bits);
   uint32_t bytes = (bits + 7) >> 3;
   uint32_t elems = BHSD_RS(dec);
+  svvrcnum();
 
   INFO("huffstream bits = %lu, elems = %u\n", bits, elems);
   int8_t* dump = sballoc(bytes);
@@ -1371,6 +1374,7 @@ TEST_F(VarSIMDTest, varstream_varvec) {
   uint32_t bytes = (bits + 7) >> 3;
   INFO("varstream bits = %u\n", bits);
   std::vector<uint64_t> v;
+  svvrcnum();
 
   auto pair = randVarWidth(bits, &v);
   uint32_t elems = BHSD_RS(pair.second);

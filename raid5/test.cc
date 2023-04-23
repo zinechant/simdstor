@@ -25,6 +25,7 @@ int main(int argc, char* argv[]) {
 
   int32_t* mp = (int32_t*)sballoc(bs << 2);
   int32_t* mo = (int32_t*)sballoc(bs << 2);
+  svvrcnum();
 
   if (encode) m5_reset_stats(0, 0);
   raid5::Encode(bs, kind, m0, m1, m2, mp);
