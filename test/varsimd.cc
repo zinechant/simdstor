@@ -11,7 +11,9 @@
 #include "util.hh"
 #include "vsbytes.hh"
 
-#define INFO(fmt, ...) printf("[   INFO   ] " fmt, __VA_ARGS__);
+#define INFO(fmt, ...)                      \
+  printf("[   INFO   ] " fmt, __VA_ARGS__); \
+  fflush(stdout);
 
 std::mt19937 mt(testing::UnitTest::GetInstance()->random_seed());
 inline uint32_t URAND8() { return mt() & ((1 << 8) - 1); }
@@ -1173,27 +1175,33 @@ TEST_F(VarSIMDTest, fixstream_fixvec) {
   int wid = fwstream(dump, width);
   INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
 
-  for (uint32_t i = 0, n = 0; i < elems; i += n) {
-    if (width <= 8) {
-      svbool_t pg = svwhilelt_b8_u32(i, elems);
-      svint8_t v = svunpack_s8(rid);
-      n = svpack_s8(pg, v, wid);
-      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
-    } else if (width <= 16) {
-      svbool_t pg = svwhilelt_b16_u32(i, elems);
-      svint16_t v = svunpack_s16(rid);
-      n = svpack_s16(pg, v, wid);
-      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
-    } else if (width <= 32) {
-      svbool_t pg = svwhilelt_b32_u32(i, elems);
-      svint32_t v = svunpack_s32(rid);
-      n = svpack_s32(pg, v, wid);
-      EXPECT_EQ(n, i + svcntw() < elems ? svcntw() : elems - i);
-    } else {
+  if (width > 32) {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
       svbool_t pg = svwhilelt_b64_u32(i, elems);
       svint64_t v = svunpack_s64(rid);
       n = svpack_s64(pg, v, wid);
       EXPECT_EQ(n, i + svcntd() < elems ? svcntd() : elems - i);
+    }
+  } else if (width > 16) {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
+      svbool_t pg = svwhilelt_b32_u32(i, elems);
+      svint32_t v = svunpack_s32(rid);
+      n = svpack_s32(pg, v, wid);
+      EXPECT_EQ(n, i + svcntw() < elems ? svcntw() : elems - i);
+    }
+  } else if (width > 8) {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
+      svbool_t pg = svwhilelt_b16_u32(i, elems);
+      svint16_t v = svunpack_s16(rid);
+      n = svpack_s16(pg, v, wid);
+      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
+    }
+  } else {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
+      svbool_t pg = svwhilelt_b8_u32(i, elems);
+      svint8_t v = svunpack_s8(rid);
+      n = svpack_s8(pg, v, wid);
+      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
     }
   }
 
@@ -1219,24 +1227,29 @@ TEST_F(VarSIMDTest, huffstream_fixvec) {
 
   int rid = hrstream(encoded, dec, bits);
   int wid = hwstream(dump, enc);
-  INFO("rid = 0x%x, wid = 0x%x\n", rid, wid);
+  INFO("rid = 0x%x, wid = 0x%x, sbits = %d, cbits = %d\n", rid, wid, enc[4],
+       enc[5]);
 
-  for (uint32_t i = 0, n = 0; i < elems; i += n) {
-    if (enc[4] <= 8) {
-      svbool_t pg = svwhilelt_b8_u32(i, elems);
-      svint8_t v = svunpack_s8(rid);
-      n = svpack_s8(pg, v, wid);
-      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
-    } else if (enc[4] <= 16) {
-      svbool_t pg = svwhilelt_b16_u32(i, elems);
-      svint16_t v = svunpack_s16(rid);
-      n = svpack_s16(pg, v, wid);
-      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
-    } else {
+  if (enc[4] > 16) {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
       svbool_t pg = svwhilelt_b32_u32(i, elems);
       svint32_t v = svunpack_s32(rid);
       n = svpack_s32(pg, v, wid);
       EXPECT_EQ(n, i + svcntw() < elems ? svcntw() : elems - i);
+    }
+  } else if (enc[4] > 8) {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
+      svbool_t pg = svwhilelt_b16_u32(i, elems);
+      svint16_t v = svunpack_s16(rid);
+      n = svpack_s16(pg, v, wid);
+      EXPECT_EQ(n, i + svcnth() < elems ? svcnth() : elems - i);
+    }
+  } else {
+    for (uint32_t i = 0, n = 0; i < elems; i += n) {
+      svbool_t pg = svwhilelt_b8_u32(i, elems);
+      svint8_t v = svunpack_s8(rid);
+      n = svpack_s8(pg, v, wid);
+      EXPECT_EQ(n, i + svcntb() < elems ? svcntb() : elems - i);
     }
   }
 
