@@ -6,14 +6,13 @@
 #include <random>
 
 #include "arm_sve.h"
+#include "debug.h"
 #include "gtest/gtest.h"
 #include "salloc.hh"
 #include "util.hh"
 #include "vsbytes.hh"
 
-#define INFO(fmt, ...)                      \
-  printf("[   INFO   ] " fmt, __VA_ARGS__); \
-  fflush(stdout);
+#define INFO(fmt, ...) iprintflush("[   INFO   ] " fmt, __VA_ARGS__);
 
 std::mt19937 mt(testing::UnitTest::GetInstance()->random_seed());
 inline uint32_t URAND8() { return mt() & ((1 << 8) - 1); }
@@ -57,12 +56,12 @@ class VarSIMDTest : public ::testing::Test {
     int i = 0;
     for (; bytes <= VB; i++) {
       uint64_t x = URAND64();
-      uint16_t y = URAND32() % 128;
-      bool neg = y > 63;
-      uint16_t bits = neg ? y - 64 : y;
+      const uint16_t y = URAND32() % 128;
+      const bool neg = y > 63;
+      const uint16_t bits = neg ? y - 64 : y;
 
       x &= ((1UL << bits) - 1);
-      int64_t z = neg ? -x : x;
+      const int64_t z = neg ? -x : x;
 
       meta[i + 2] = VSPackBytes(pdata, z);
       bytes += BITS2BYTES(meta[i + 2]);
@@ -72,7 +71,7 @@ class VarSIMDTest : public ::testing::Test {
   }
 
   inline int8_t* randFixWidth(uint8_t width, uint64_t bits) {
-    uint32_t bytes = (bits + 7) >> 3;
+    const uint32_t bytes = (bits + 7) >> 3;
     int8_t* ans = sballoc(bytes);
 
     const uint32_t elems = bits / width;
@@ -90,7 +89,7 @@ class VarSIMDTest : public ::testing::Test {
 
   inline std::pair<int8_t*, int8_t*> randVarWidth(uint64_t bits,
                                                   std::vector<uint64_t>* pvec) {
-    uint32_t bytes = (bits + 7) >> 3;
+    const uint32_t bytes = (bits + 7) >> 3;
     std::pair<int8_t*, int8_t*> ans(sballoc(bytes), nullptr);
     uint8_t* pdata = (uint8_t*)ans.first;
     std::vector<int8_t> meta;
@@ -98,7 +97,7 @@ class VarSIMDTest : public ::testing::Test {
     uint8_t pos = 0;
     for (uint8_t b = 0; bits; bits -= b) {
       b = std::min(URAND32() & 63, (uint32_t)bits);
-      uint64_t x =
+      const uint64_t x =
           (b == 0) ? 0 : ((1UL << (b - 1)) + (URAND64() & MASK(b - 1)));
       EXPECT_EQ(b, x ? 64 - __builtin_clzl(x) : 0);
       PackBits(pdata, pos, b, x);
@@ -122,7 +121,7 @@ class VarSIMDTest : public ::testing::Test {
     const int kMaxDSize = 0x5000000;
     static int8_t* enc = sballoc(kMaxDSize);
 
-    int d = URAND32() & 15;
+    const int d = URAND32() & 15;
     char dicp[100];
     sprintf(dicp, kDictFmt, d);
     int abytes = filesize(dicp);
@@ -157,7 +156,8 @@ class VarSIMDTest : public ::testing::Test {
     return ans;
   }
 
-  inline void expect(int n, int m, int64_t a, int64_t b, int64_t c, int64_t d) {
+  inline void expect(const int n, const int m, const int64_t a, const int64_t b,
+                     const int64_t c, const int64_t d) {
     EXPECT_LE(VB / 8, n);
     EXPECT_EQ(n, BHSD_RH(meta.data()));
     INFO("n = %d\n", n);
@@ -394,6 +394,22 @@ TEST_F(VarSIMDTest, vadd_zi1) {
 
   int n = svvstore(v, (int8_t*)data.data(), (int8_t*)meta.data());
   expect(n, -1, a, b, c, d);
+}
+
+TEST_F(VarSIMDTest, vadd_reuse) {
+  const int N = 8;
+  const int c = 7;
+  const int b = 64;
+  const int d = c + N * b;
+  svint32_t vc = svvcpz(svptrue_b8(), c);
+  svint32_t vb = svvcpz(svptrue_b8(), b);
+  for (int i = 0; i < 8; i++) {
+    vc = svvadd_m(svptrue_b8(), vb, vc);
+  }
+  dprintf_vsv("vc", vc);
+
+  int n = svvstore(vc, (int8_t*)data.data(), (int8_t*)meta.data());
+  expect(n, -1, d, d, d, d);
 }
 
 TEST_F(VarSIMDTest, vadd_zi2) {
@@ -1334,9 +1350,9 @@ TEST_F(VarSIMDTest, fixstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
+    crstream(rid, svvrcnum());
   }
 
   uint32_t bitsleft = erstream(rid);
@@ -1367,9 +1383,9 @@ TEST_F(VarSIMDTest, huffstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
+    crstream(rid, svvrcnum());
   }
 
   uint32_t bitsleft = erstream(rid);
@@ -1405,9 +1421,9 @@ TEST_F(VarSIMDTest, varstream_varvec) {
   for (uint32_t i = 0, n = 0; i < elems; i += n) {
     svint32_t v = svvunpack(svptrue_b8(), rid);
     n = svvpack(svptrue_b8(), v, wid);
-    crstream(rid, svvrcnum());
     EXPECT_NE(0U, n);
     EXPECT_GE(elems - i, n);
+    crstream(rid, svvrcnum());
   }
 
   uint32_t bitsleft = erstream(rid);

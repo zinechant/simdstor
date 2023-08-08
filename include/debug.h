@@ -21,6 +21,18 @@
     if (VERBOSE_LEVEL) fprintf(stderr, fmt, __VA_ARGS__); \
   } while (0)
 
+#define dprintflush(fmt, ...)                                 \
+  do {                                                        \
+    if (VERBOSE_LEVEL > 1) fprintf(stderr, fmt, __VA_ARGS__); \
+    if (VERBOSE_LEVEL > 1) fflush(stderr);                    \
+  } while (0)
+
+#define iprintflush(fmt, ...)                             \
+  do {                                                    \
+    if (VERBOSE_LEVEL) fprintf(stderr, fmt, __VA_ARGS__); \
+    if (VERBOSE_LEVEL) fflush(stderr);                    \
+  } while (0)
+
 #ifdef __riscv_vector
 #include <riscv_vector.h>
 enum { MAX_VL_BYTES = 32768 };
@@ -248,7 +260,7 @@ inline void __print_vsv(const char *prefix, svint32_t v) {
   const uint8_t *pmeta = (const uint8_t *)meta + 2;
   for (int i = 0; i < n; i++) {
     int64_t t = VSUnpackBytes(pdata, pmeta[i]);
-    fprintf(stderr, "%9lx ", t);
+    fprintf(stderr, "%lx(%db) ", t, pmeta[i]);
   }
   fprintf(stderr, "\n");
   fflush(stderr);
